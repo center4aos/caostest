@@ -14,3 +14,4 @@ Open source  helps drive  global equity, but   to benefit everyone,  open-source
 CAOS   is under construction. Please check back soon.
 
 Send questions   to  info@caos.org.
+or sign up for the  low-traffic [CAOS-announcements email list](https://groups.google.com/g/caos-announcements/) to keep in touch.
