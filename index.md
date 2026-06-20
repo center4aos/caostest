@@ -2,12 +2,15 @@
 layout: default
 title: Home
 permalink: /
-description: The Center for Accessibility and Open Source — making open source accessible to everyone.
+description: The Center for Accessibility and Open Source — where the values of the open-source and disability rights movements come together.
 ---
 
-## Open source, accessible to all.
+## Open source must be open to everyone.
 
-CAOS is a nonprofit organization led by people with disabilities, working to make the open-source world more accessible and inclusive. We connect communities, support projects, and advocate for accessibility as a first-class value in open source.
+People with disabilities have a right to equal access to digital tools and the opportunities they unlock. CAOS is the first organization to make the accessibility of open-source resources its primary mission — supporting disability inclusion in open-source communities and the development of open-source assistive technologies worldwide.
+
+> "We need to build a future in which the educational and economic opportunities promised by open source are also open to people with disabilities."
+> — Dr. Joshua A. Miele, CAOS Founder
 
 ---
 
@@ -24,7 +27,7 @@ CAOS is a nonprofit organization led by people with disabilities, working to mak
 </ul>
 <p><a href="{{ "/blog" | relative_url }}">All posts →</a></p>
 {% else %}
-<p>Blog posts coming soon. <a href="{{ "/about" | relative_url }}">Learn more about CAOS.</a></p>
+<p>Blog posts coming soon. <a href="{{ "/caostest/about/" | relative_url }}">Learn more about CAOS.</a></p>
 {% endif %}
 
 ---
@@ -32,7 +35,7 @@ CAOS is a nonprofit organization led by people with disabilities, working to mak
 ### Upcoming Events
 
 <!-- PLACEHOLDER: Calendar embed or events list goes here -->
-<p>Check back soon for our schedule of events and board meetings. In the meantime, <a href="{{ "/contact" | relative_url }}">get in touch</a>.</p>
+<p>Check back soon for our schedule of events and board meetings. In the meantime, <a href="/caostest/contact/">get in touch</a>.</p>
 
 ---
 
@@ -41,4 +44,4 @@ CAOS is a nonprofit organization led by people with disabilities, working to mak
 Subscribe to the CAOS newsletter to receive updates on our work, events, and opportunities to get involved.
 
 <!-- TODO: Wire up newsletter signup (groups.io or other list service) -->
-<p><a href="{{ "/contact" | relative_url }}">Sign up via our contact page →</a></p>
+<p><a href="/caostest/contact/">Sign up via our contact page →</a></p>

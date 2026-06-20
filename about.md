@@ -7,37 +7,56 @@ description: Who we are, our mission, and the people behind CAOS.
 
 ## About CAOS
 
-The Center for Accessibility and Open Source (CAOS) is an open-source organization led by people with disabilities. We exist to promote accessibility within open-source communities — making tools, projects, and the communities themselves more welcoming and usable for everyone.
+The Center for Accessibility and Open Source (CAOS) is a disability-led open-source organization. We are the first organization to make the accessibility of open-source resources our primary mission — a place where the values of the open-source and disability rights movements come together.
+
+---
+
+### Vision
+
+CAOS aims to be the global community's hub for resources and information at the intersection of accessibility, disability equity, and open source.
+
+---
 
 ### Mission Statement
 
-<!-- TODO: Insert official mission statement -->
-*To be added.*
+With the goal of expanding opportunities and inclusion for people with disabilities globally, the Center for Accessibility and Open Source supports the creation of accessible open-source products through explicit disability inclusion in mainstream open-source communities. We are equally committed to supporting the visibility and sustainability of communities developing open-source assistive technologies.
+
+---
 
 ### Our Story
 
-<!-- TODO: Brief paragraph on CAOS origin -->
-*To be added.*
+CAOS was founded by Dr. Joshua A. Miele, whose work at the intersection of blindness, technology, and open source led to the recognition that no organization existed to champion accessibility as a first-class value in the open-source world. CAOS is based in the San Francisco Bay Area and built on a global community of contributors and collaborators.
+
+> "We need to build a future in which the educational and economic opportunities promised by open source are also open to people with disabilities."
+> — Dr. Joshua A. Miele, CAOS Founder
 
 ---
 
 ### Officers and Board Members
 
-<!-- TODO: Add bios and photos for each board member using the structure below -->
+#### Josh Miele — President
 
-#### [Board Member Name]
+Josh Miele is a blind scientist and accessibility researcher and the founder of CAOS.
 
-[Photo placeholder]
+#### Ed Summers
 
-[Short bio paragraph.]
+Ed Summers brings experience from GitHub and a long history of work at the intersection of technology and open culture.
+
+#### Jennifer Mankoff
+
+Jennifer Mankoff is a professor at the University of Washington with deep expertise in accessibility and human-computer interaction.
+
+#### Liz Henry
+
+Liz Henry (GOAT) brings extensive experience in open-source communities and disability advocacy.
+
+<!-- TODO: Add full bios, photos, and any additional board members -->
 
 ---
 
 ### Advisory Board
 
-CAOS is guided by an advisory board of experts in accessibility, technology, disability rights, and open-source development. Advisory board members provide strategic counsel and help connect CAOS with the broader community.
+CAOS is building an advisory board that broadly includes disability and open-source stakeholders across all demographics and identities. Advisory board members provide strategic counsel and help connect CAOS with the broader community.
 
-**Advisory Board Members:**
-
-<!-- TODO: List advisory board members -->
-- *To be added.*
+<!-- TODO: List advisory board members as confirmed -->
+*Advisory board members to be announced.*

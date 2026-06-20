@@ -19,8 +19,8 @@ We believe accountability to our community requires openness. Our governing docu
 
 ### Governing Documents
 
-- [Bylaws](#) <!-- TODO: Link to actual document -->
-- [Conflict of Interest Policy](#) <!-- TODO: Link to actual document -->
+- [Bylaws](/caostest/bylaws/)
+- [Conflict of Interest Policy](/caostest/conflict-of-interest/)
 
 ---
 
@@ -32,11 +32,11 @@ We believe accountability to our community requires openness. Our governing docu
 
 ### Board Meetings
 
-CAOS board meetings are held on a regular schedule. All members of the public are welcome to attend.
+CAOS board meetings are held on a regular schedule and are open to the public except where the board votes to make a specific portion confidential. All board minutes are made available to the public once accepted by the board.
 
-<!-- TODO: Add meeting schedule or embed calendar -->
-*Schedule to be posted here.*
+<!-- TODO: Add meeting schedule -->
+*Meeting schedule coming soon.*
 
 ---
 
-*Questions about our governance? [Contact us.](/contact/)*
+*Questions about our governance? [Contact us.](/caostest/contact/)*
