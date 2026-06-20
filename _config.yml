@@ -21,6 +21,12 @@ header_pages:
   - support.md
   - contact.md
 
+collections:
+  events:
+    output: true
+    permalink: /events/:name/
+    sort_by: date
+
 plugins:
   - jekyll-feed
   - jekyll-seo-tag

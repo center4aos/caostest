@@ -86,6 +86,46 @@ a {
   }
 }
 
+// Event meta (date/time/location definition list)
+.event-meta {
+  margin: 1rem 0 1.5rem;
+  padding: 0;
+
+  .event-meta-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  dt {
+    font-weight: bold;
+    min-width: 5rem;
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+// Calendar event list
+.event-list {
+  list-style: none;
+  padding: 0;
+
+  .event-list-item {
+    padding: 0.4rem 0;
+    border-bottom: 1px solid;
+
+    time {
+      font-weight: bold;
+    }
+  }
+}
+
+.event-list--past {
+  opacity: 0.75;
+}
+
 // Footer
 .site-footer {
   margin-top: 3rem;

@@ -1,0 +1,31 @@
+---
+layout: default
+---
+<article class="event" aria-labelledby="event-title">
+  <header class="event-header">
+    <h1 id="event-title">{{ page.title | escape }}</h1>
+
+    <dl class="event-meta">
+      <div class="event-meta-row">
+        <dt>Date</dt>
+        <dd><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%A, %B %-d, %Y" }}</time></dd>
+      </div>
+      {% if page.time %}
+      <div class="event-meta-row">
+        <dt>Time</dt>
+        <dd>{{ page.time | escape }}</dd>
+      </div>
+      {% endif %}
+      {% if page.location %}
+      <div class="event-meta-row">
+        <dt>Location</dt>
+        <dd>{{ page.location | escape }}</dd>
+      </div>
+      {% endif %}
+    </dl>
+  </header>
+
+  <div class="event-content">
+    {{ content }}
+  </div>
+</article>
