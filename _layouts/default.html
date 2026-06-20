@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% seo %}
+    <link rel="stylesheet" href="{{ "/assets/css/accessibility.css" | relative_url }}">
+    <link rel="alternate" type="application/atom+xml" title="{{ site.title | escape }}" href="{{ "/atom.xml" | relative_url }}">
+  </head>
+
+  <body>
+    {% include header.html %}
+
+    <main id="main-content" class="page-content wrapper" tabindex="-1">
+      {% include breadcrumbs.html %}
+
+      <article class="post" aria-labelledby="page-title">
+        <header class="post-header">
+          <h1 class="post-title" id="page-title">{{ page.title | escape }}</h1>
+          {% if page.description %}
+            <p class="page-description">{{ page.description }}</p>
+          {% endif %}
+        </header>
+
+        <div class="post-content">
+          {{ content }}
+        </div>
+      </article>
+    </main>
+
+    {% include footer.html %}
+  </body>
+</html>

@@ -1,0 +1,41 @@
+title: Center for Accessibility and Open Source
+tagline: Open source. Accessible to all.
+email: info@caos.org
+description: >-
+  CAOS is a nonprofit organization led by people with disabilities
+  to promote open-source accessibility worldwide.
+baseurl: "/caostest"
+url: "https://center4aos.github.io"
+
+remote_theme: jekyll/minima
+
+minima:
+  skin: auto  # respects system light/dark preference
+
+# Page order for navigation
+header_pages:
+  - about.md
+  - projects.md
+  - resources.md
+  - governance.md
+  - support.md
+  - contact.md
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-remote-theme
+  - jekyll-sitemap
+
+# Accessibility: ensure feed and sitemap are generated
+feed:
+  path: atom.xml
+
+# Exclude dev files from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - "CAOS Site Requirements.md"
+  - README.md
+  - node_modules
+  - vendor

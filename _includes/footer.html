@@ -1,0 +1,42 @@
+<footer class="site-footer" role="contentinfo">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+
+      <div class="footer-col">
+        <h2 class="footer-heading">{{ site.title | escape }}</h2>
+        <ul class="contact-list">
+          {% if site.email %}
+            <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <p><strong>Connect</strong></p>
+        <ul class="social-media-list">
+          {% if site.github_username %}
+            <li>
+              <a href="https://github.com/{{ site.github_username | escape }}" rel="noopener noreferrer" aria-label="CAOS on GitHub">
+                GitHub
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <ul>
+          <li><a href="{{ "/accessibility-statement" | relative_url }}">Accessibility Statement</a></li>
+          <li><a href="{{ "/contact" | relative_url }}">Contact</a></li>
+          <li><a href="{{ "/support" | relative_url }}">Donate</a></li>
+        </ul>
+        <p>
+          Content licensed under
+          <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener noreferrer">CC BY 4.0</a>
+          unless otherwise noted.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</footer>
