@@ -34,8 +34,21 @@ People with disabilities have a right to equal access to digital tools and the o
 
 ### Upcoming Events
 
-<!-- PLACEHOLDER: Calendar embed or events list goes here -->
-<p>Check back soon for our schedule of events and board meetings. In the meantime, <a href="/caostest/contact/">get in touch</a>.</p>
+{% assign upcoming = site.events | where_exp: "event", "event.date >= site.time" | sort: "date" %}
+{% if upcoming.size > 0 %}
+<ul>
+  {% for event in upcoming limit:3 %}
+  <li>
+    <a href="{{ event.url | relative_url }}">{{ event.title | escape }}</a>
+    — <time datetime="{{ event.date | date_to_xmlschema }}">{{ event.date | date: "%B %-d, %Y" }}</time>
+    {% if event.time %} at {{ event.time }}{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+<p><a href="{{ "/calendar/" | relative_url }}">Full calendar →</a></p>
+{% else %}
+<p>No upcoming events at this time. <a href="{{ "/calendar/" | relative_url }}">Check the calendar.</a></p>
+{% endif %}
 
 ---
 
