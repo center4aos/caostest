@@ -30,5 +30,19 @@
     </main>
 
     {% include footer.html %}
+
+    <script>
+      // Open all external links in a new tab
+      document.querySelectorAll('a[href^="http"]').forEach(function(link) {
+        if (link.hostname !== window.location.hostname) {
+          link.setAttribute('target', '_blank');
+          link.setAttribute('rel', 'noopener noreferrer');
+          // Accessibility: warn screen reader users the link opens in a new tab
+          if (!link.getAttribute('aria-label')) {
+            link.setAttribute('aria-label', link.textContent.trim() + ' (opens in new tab)');
+          }
+        }
+      });
+    </script>
   </body>
 </html>
