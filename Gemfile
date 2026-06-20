@@ -2,8 +2,7 @@ source "https://rubygems.org"
 
 gem "csv"
 gem "bigdecimal"
-gem "base64"
-gem "logger"
+gem "liquid", ">= 4.0.4"
 gem "github-pages", group: :jekyll_plugins
 
 group :jekyll_plugins do
