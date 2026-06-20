@@ -3,6 +3,8 @@ layout: default
 title: Bylaws
 permalink: /bylaws/
 description: The official bylaws of The Center for Accessibility and Open Source. EIN 39-2978169.
+parent: Governance
+parent_url: /governance/
 ---
 
 ## Bylaws of The Center for Accessibility and Open Source

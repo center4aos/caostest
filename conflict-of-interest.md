@@ -3,6 +3,8 @@ layout: default
 title: Conflict of Interest Policy
 permalink: /conflict-of-interest/
 description: The Conflict of Interest Policy of the Center for Accessibility and Open Source.
+parent: Governance
+parent_url: /governance/
 ---
 
 ## Conflict of Interest Policy
