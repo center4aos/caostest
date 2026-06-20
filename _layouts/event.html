@@ -3,7 +3,7 @@ layout: default
 ---
 <article class="event" aria-labelledby="event-title">
   <header class="event-header">
-    <h1 id="event-title">{{ page.title | escape }}</h1>
+    <h1 id="event-title">{{ page.title }}</h1>
 
     <dl class="event-meta">
       <div class="event-meta-row">
@@ -13,13 +13,13 @@ layout: default
       {% if page.time %}
       <div class="event-meta-row">
         <dt>Time</dt>
-        <dd>{{ page.time | escape }}</dd>
+        <dd>{{ page.time }}</dd>
       </div>
       {% endif %}
       {% if page.location %}
       <div class="event-meta-row">
         <dt>Location</dt>
-        <dd>{{ page.location | escape }}</dd>
+        <dd>{{ page.location }}</dd>
       </div>
       {% endif %}
     </dl>

@@ -21,6 +21,8 @@ header_pages:
   - support.md
   - contact.md
 
+future: true
+
 collections:
   events:
     output: true

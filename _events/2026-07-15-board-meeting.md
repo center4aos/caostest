@@ -3,6 +3,7 @@ layout: event
 title: "CAOS Board Meeting"
 date: 2026-07-15
 time: "7:00 PM Pacific Time"
+Location: "CAOS Headquarters"
 parent: Calendar
 parent_url: /calendar/
 ---
