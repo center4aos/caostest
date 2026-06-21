@@ -9,9 +9,8 @@ description: We want to hear from you. Reach out, stay in touch, or get involved
 
 We want to hear from you and welcome your questions, ideas, and contributions. Fill out the form below or reach us directly.
 
-<!-- TODO: Wire this form to a backend (Formspree, groups.io POST URL, or similar).
-     Current action="#" is a placeholder — form will not submit until this is configured. -->
-<form action="#" method="POST" aria-label="Contact CAOS">
+<form action="https://formspree.io/f/mkolwzlo" method="POST" aria-label="Contact CAOS">
+  <input type="hidden" name="_next" value="https://caos.org/caostest/contact/thanks/">
 
   <div>
     <label for="contact-name">Name <span aria-hidden="true">*</span></label>
