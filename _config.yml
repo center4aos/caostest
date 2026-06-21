@@ -5,7 +5,7 @@ description: >-
   CAOS is a nonprofit organization led by people with disabilities
   to promote open-source accessibility worldwide.
 baseurl: "/caostest"
-url: "https://center4aos.github.io"
+url: "https://caos.org"
 
 theme: minima
 
