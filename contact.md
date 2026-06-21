@@ -9,8 +9,8 @@ description: We want to hear from you. Reach out, stay in touch, or get involved
 
 We want to hear from you and welcome your questions, ideas, and contributions. Fill out the form below or reach us directly.
 
-<div data-fs-success role="status">
-<p>Thank you for contacting CAOS. We appreciate your interest and will respond as quickly as possible.</p>
+<div data-fs-success role="alert" tabindex="-1" id="contact-success">
+<p>Your message has been sent. We look forward to being in touch.</p>
 </div>
 
 <div data-fs-error role="alert"></div>
@@ -66,6 +66,14 @@ We want to hear from you and welcome your questions, ideas, and contributions. F
 <script>
   window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
   formspree('initForm', { formElement: '#contact-form', formId: 'mkolwzlo' });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var success = document.getElementById('contact-success');
+    if (!success) return;
+    new MutationObserver(function () {
+      if (success.offsetParent !== null) success.focus();
+    }).observe(success, { attributes: true, attributeFilter: ['style', 'class'] });
+  });
 </script>
 <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
