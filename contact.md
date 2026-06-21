@@ -9,22 +9,29 @@ description: We want to hear from you. Reach out, stay in touch, or get involved
 
 We want to hear from you and welcome your questions, ideas, and contributions. Fill out the form below or reach us directly.
 
-<form action="https://formspree.io/f/mkolwzlo" method="POST" aria-label="Contact CAOS">
-  <input type="hidden" name="_next" value="https://caos.org/caostest/contact/thanks/">
+<div data-fs-success role="status">
+<p>Thank you for contacting CAOS. We appreciate your interest and will respond as quickly as possible.</p>
+</div>
+
+<div data-fs-error role="alert"></div>
+
+<form id="contact-form" action="https://formspree.io/f/mkolwzlo" method="POST" aria-label="Contact CAOS">
 
   <div>
     <label for="contact-name">Name <span aria-hidden="true">*</span></label>
-    <input type="text" id="contact-name" name="name" required autocomplete="name">
+    <input type="text" id="contact-name" name="name" required autocomplete="name" data-fs-field>
+    <span data-fs-error="name"></span>
   </div>
 
   <div>
     <label for="contact-email">Email address <span aria-hidden="true">*</span></label>
-    <input type="email" id="contact-email" name="email" required autocomplete="email">
+    <input type="email" id="contact-email" name="email" required autocomplete="email" data-fs-field>
+    <span data-fs-error="email"></span>
   </div>
 
   <div>
     <label for="contact-topic">Topic <span aria-hidden="true">*</span></label>
-    <select id="contact-topic" name="topic" required>
+    <select id="contact-topic" name="topic" required data-fs-field>
       <option value="">— Please select —</option>
       <option value="accessibility-advice">Seeking advice on open-source accessibility</option>
       <option value="partnership">Partnership proposal</option>
@@ -33,25 +40,34 @@ We want to hear from you and welcome your questions, ideas, and contributions. F
       <option value="advisory-board">Advisory Board</option>
       <option value="donation">Donation</option>
     </select>
+    <span data-fs-error="topic"></span>
   </div>
 
   <div>
     <label for="contact-subject">Subject <span aria-hidden="true">*</span></label>
-    <input type="text" id="contact-subject" name="subject" required>
+    <input type="text" id="contact-subject" name="subject" required data-fs-field>
+    <span data-fs-error="subject"></span>
   </div>
 
   <div>
     <label for="contact-message">Message <span aria-hidden="true">*</span></label>
     <textarea id="contact-message" name="message" rows="6" required
-      aria-describedby="message-hint"></textarea>
+      aria-describedby="message-hint" data-fs-field></textarea>
     <p id="message-hint" class="field-hint">Please do not include links in your message.</p>
+    <span data-fs-error="message"></span>
   </div>
 
   <div>
-    <button type="submit">Send message</button>
+    <button type="submit" data-fs-submit-btn>Send message</button>
   </div>
 
 </form>
+
+<script>
+  window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+  formspree('initForm', { formElement: '#contact-form', formId: 'mkolwzlo' });
+</script>
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
 ---
 
