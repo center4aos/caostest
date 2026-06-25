@@ -54,7 +54,14 @@ People with disabilities have a right to equal access to digital tools and the o
 
 ### Stay Connected
 
-Subscribe to the CAOS newsletter to receive updates on our work, events, and opportunities to get involved.
+Subscribe to CAOS News to receive updates on our work, events, and opportunities to get involved.
 
-<!-- TODO: Wire up newsletter signup (groups.io or other list service) -->
-<p><a href="/caostest/contact/">Sign up via our contact page →</a></p>
+<form action="https://buttondown.com/api/emails/embed-subscribe/caos" method="post" aria-label="Subscribe to CAOS News newsletter">
+  <div>
+    <label for="home-bd-email">Email address</label>
+    <input type="email" name="email" id="home-bd-email" required autocomplete="email">
+  </div>
+  <div>
+    <button type="submit">Subscribe to CAOS News</button>
+  </div>
+</form>

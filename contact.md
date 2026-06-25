@@ -81,8 +81,17 @@ We want to hear from you and welcome your questions, ideas, and contributions. F
 
 ### Newsletter
 
-<!-- TODO: Replace with actual groups.io or list-service subscribe URL -->
-Stay up to date with CAOS news, events, and opportunities. [Subscribe to our newsletter](#).
+Stay up to date with CAOS news, events, and opportunities by subscribing to CAOS News.
+
+<form action="https://buttondown.com/api/emails/embed-subscribe/caos" method="post" aria-label="Subscribe to CAOS News newsletter">
+  <div>
+    <label for="contact-bd-email">Email address</label>
+    <input type="email" name="email" id="contact-bd-email" required autocomplete="email">
+  </div>
+  <div>
+    <button type="submit">Subscribe to CAOS News</button>
+  </div>
+</form>
 
 ---
 
