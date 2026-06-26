@@ -32,6 +32,19 @@
     {% include footer.html %}
 
     <script>
+      // On page load, move screen reader focus to the first H2 in the page content,
+      // so focus starts just below the nav rather than in an unpredictable location.
+      document.addEventListener('DOMContentLoaded', function () {
+        var target = document.querySelector('.post-content h2');
+        if (!target) target = document.getElementById('main-content');
+        if (target) {
+          target.setAttribute('tabindex', '-1');
+          target.focus();
+        }
+      });
+    </script>
+
+    <script>
       // Open all external links in a new tab
       document.querySelectorAll('a[href^="http"]').forEach(function(link) {
         if (link.hostname !== window.location.hostname) {
