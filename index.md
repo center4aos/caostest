@@ -2,14 +2,14 @@
 layout: default
 title: CAOS Home
 permalink: /
-description: The Center for Accessibility and Open Source — where disability and accessibility meet open sourcetogether.
+description: The Center for Accessibility and Open Source — where disability, accessibility, and open source meet.
 ---
 
-## Welcome to CAOS!
+## Welcome to the Center for Accessibility and Open Source
 
-CAOS makes open-source accessibility its primary mission — supporting disability inclusion in open-source communities and the development of open-source assistive technologies worldwide.
+Open-source accessibility is our primary mission: We support disability inclusion in open-source communities, and open-source assistive technologies of all kinds.
 
-> "We are building a future in which the educational and economic opportunities promised by open source are also open to people with disabilities."
+> "CAOS is building a future in which the educational and economic opportunities promised by open source are also open to people with disabilities."
 > — Dr. Joshua A. Miele, CAOS Founder
 
 ---
