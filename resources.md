@@ -38,4 +38,4 @@ Below is a curated, growing list of resources to support that work.
 
 ---
 
-*Know a resource we should list? [Let us know.](/contact/)*
+*Know a resource we should list? [Let us know.]({{ "/contact/" | relative_url }})*

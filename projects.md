@@ -1,13 +1,13 @@
 ---
 layout: default
-title: Projects
+title: CAOS Projects
 permalink: /projects/
-description: Open-source communities and projects CAOS actively partners with.
+description: CAOS Partners and Allies
 ---
 
 ## Projects of Interest
 
-Open source and accessibility is a big world. Our active partnerships grow from our strategic plan and the findings of the 2027 Open-Source Accessibility Needs Assessment. Below are the communities and projects with whom we currently collaborate.
+CAOS active partnerships are guided by our strategic plan and the findings of the 2027 Open-Source Accessibility Needs Assessment. Below are some of the communities and projects with whom we currently collaborate closely or loosely.
 
 ---
 
@@ -29,4 +29,4 @@ Open source and accessibility is a big world. Our active partnerships grow from 
 
 ---
 
-*More partnerships to be listed here. [Contact us](/caostest/contact/) if you'd like to explore a collaboration.*
+*[Contact us]({{ "/contact/" | relative_url }}) if you'd like to explore a collaboration.*

@@ -1,20 +1,20 @@
 ---
 layout: default
-title: Home
+title: CAOS Home
 permalink: /
-description: The Center for Accessibility and Open Source — where the values of the open-source and disability rights movements come together.
+description: The Center for Accessibility and Open Source — where disability and accessibility meet open sourcetogether.
 ---
 
-## Open source must be open to everyone.
+## Welcome to CAOS!
 
-People with disabilities have a right to equal access to digital tools and the opportunities they unlock. CAOS is the first organization to make the accessibility of open-source resources its primary mission — supporting disability inclusion in open-source communities and the development of open-source assistive technologies worldwide.
+CAOS makes open-source accessibility its primary mission — supporting disability inclusion in open-source communities and the development of open-source assistive technologies worldwide.
 
-> "We need to build a future in which the educational and economic opportunities promised by open source are also open to people with disabilities."
+> "We are building a future in which the educational and economic opportunities promised by open source are also open to people with disabilities."
 > — Dr. Joshua A. Miele, CAOS Founder
 
 ---
 
-### Latest from the CAOS Blog
+### Updates from the CAOS Blog
 
 {% if site.posts.size > 0 %}
 <ul>
@@ -27,12 +27,12 @@ People with disabilities have a right to equal access to digital tools and the o
 </ul>
 <p><a href="{{ "/blog" | relative_url }}">All posts →</a></p>
 {% else %}
-<p>Blog posts coming soon. <a href="{{ "/caostest/about/" | relative_url }}">Learn more about CAOS.</a></p>
+<p>Blog posts coming soon. <a href="{{ "/about/" | relative_url }}">Learn more about CAOS.</a></p>
 {% endif %}
 
 ---
 
-### Upcoming Events
+### Upcoming CAOS Events
 
 {% assign upcoming = site.events | where_exp: "event", "event.date >= site.time" | sort: "date" %}
 {% if upcoming.size > 0 %}

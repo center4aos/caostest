@@ -19,8 +19,8 @@ We believe accountability to our community requires openness. Our governing docu
 
 ### Governing Documents
 
-- [Bylaws](/caostest/bylaws/)
-- [Conflict of Interest Policy](/caostest/conflict-of-interest/)
+- [Bylaws]({{ "/bylaws/" | relative_url }})
+- [Conflict of Interest Policy]({{ "/conflict-of-interest/" | relative_url }})
 
 ---
 
@@ -39,4 +39,4 @@ CAOS board meetings are held on a regular schedule and are open to the public ex
 
 ---
 
-*Questions about our governance? [Contact us.](/caostest/contact/)*
+*Questions about our governance? [Contact us.]({{ "/contact/" | relative_url }})*

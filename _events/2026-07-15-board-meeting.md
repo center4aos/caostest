@@ -10,4 +10,4 @@ parent_url: /calendar/
 
 Regular quarterly board meeting of the CAOS Board of Directors. All board deliberations are open to the public.
 
-To attend, please [contact us](/caostest/contact/) for connection details.
+To attend, please [contact us]({{ "/contact/" | relative_url }}) for connection details.
