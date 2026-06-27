@@ -38,8 +38,10 @@ If you would like to include CAOS in your estate plans, you may use the followin
 #### Check
 Make checks payable to **Center for Accessibility and Open Source** and mail to:
 
-<!-- TODO: Add mailing address -->
-*Address coming soon.*
+*Center for Accessibility and Open Source
+2703 7th St Ste 128
+Mailbox 313
+Berkeley, CA 94710*
 
 ---
 
@@ -54,5 +56,5 @@ To discuss how you'd like to contribute, or for questions about major gifts:
 ### Legal Information
 
 - **Organization name:** Center for Accessibility and Open Source
-- **EIN:** <!-- TODO: Add EIN -->
+- **EIN:** 39-2978169
 - **Tax status:** 501(c)(3) nonprofit — donations are tax-deductible to the extent allowed by law.

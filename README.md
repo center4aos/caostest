@@ -110,5 +110,5 @@ Never hardcode `/caostest/...` paths or bare root-relative `/path/` links — bo
 - Add mailing address and EIN to support page
 - Add Form 990 link to governance page
 - Add board meeting schedule to governance page
-- Enable HTTPS enforcement on GitHub Pages settings
-- Delete legacy `docs/` folder from repo
+- ~~Enable HTTPS enforcement on GitHub Pages settings~~ ✅ done
+- ~~Delete legacy `docs/` folder from repo~~ ✅ done

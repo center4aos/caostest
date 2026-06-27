@@ -76,17 +76,18 @@
 - ✅ Page structure and framing text
 - ✅ Contact form fields: name, email, subject, topic dropdown, message body
   - Topics: Seeking advice, Partnership proposal, Seeking support, Media inquiry, Advisory Board, Donation
-- 🔲 Contact form backend (Formspree or groups.io POST URL)
-- 🔲 Newsletter signup embed on contact page (Buttondown)
-- 🔲 Snail mail address
+- ✅ Contact form backend configured
+- ✅ Newsletter signup embed on contact page
+- 🔲 Newsletter signup backend (Buttondown)
+- ✅ Snail mail address
 
 ### Support CAOS
 
 - ✅ Mission-framed donation intro
 - ✅ PayPal, Venmo, Zelle, Benevity, planned giving language, check instructions
 - ✅ giving@caos.org contact
-- 🔲 Mailing address
-- 🔲 EIN
+- ✅ Mailing address
+- ✅ EIN (39-2978169)
 
 ### Projects of Interest
 
