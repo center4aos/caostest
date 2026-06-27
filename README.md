@@ -19,18 +19,21 @@ CAOS is a California 501(c)(3) nonprofit — the first organization to make the 
 |---|---|
 | `_posts/` | Blog posts |
 | `_events/` | Calendar events |
-| `_layouts/` | Page templates (default, page, event) |
-| `_includes/` | Header, footer, breadcrumbs |
+| `_layouts/default.html` | Base page template (skip link, nav, breadcrumbs, footer, focus management, external link handling) |
+| `_layouts/event.html` | Event detail page template |
+| `_includes/header.html` | Skip-to-main link, site title, nav with aria-current |
+| `_includes/footer.html` | Social links, accessibility statement, license, donate |
+| `_includes/breadcrumbs.html` | Auto breadcrumbs using `parent` / `parent_url` front matter |
 | `assets/css/accessibility.scss` | Accessibility-focused style overrides |
-| `index.md` | Home page |
-| `about.md` | About CAOS, mission, board |
-| `projects.md` | Active partnerships |
-| `resources.md` | Curated accessibility resources |
+| `index.md` | Home page: mission, blog preview, upcoming events, newsletter signup |
+| `about.md` | About CAOS, mission, board bios |
+| `projects.md` | Active partnerships (CREATE, Teach Access, NV Access) |
+| `resources.md` | Curated accessibility resources (content placeholder) |
 | `governance.md` | Bylaws links, board meeting info |
 | `bylaws.md` | Full corporate bylaws |
 | `conflict-of-interest.md` | Conflict of interest policy |
 | `support.md` | Donation information |
-| `contact.md` | Contact form |
+| `contact.md` | Contact form and newsletter signup |
 | `calendar.md` | Upcoming events |
 | `blog.md` | Blog index |
 | `accessibility-statement.md` | Public accessibility commitment |
@@ -74,10 +77,38 @@ Events are sorted chronologically. Past events are not displayed on the calendar
 
 ---
 
+## Internal Links
+
+All internal links must use Jekyll's `relative_url` filter so they remain correct when the site moves from `/caostest/` to the domain root:
+
+```liquid
+[Link text]({{ "/path/to/page/" | relative_url }})
+```
+
+Never hardcode `/caostest/...` paths or bare root-relative `/path/` links — both break on migration.
+
+---
+
 ## Technical Notes
 
 - **Theme:** `minima` (native gem) with `skin: auto` for system light/dark preference
 - **Breadcrumbs:** Child pages (bylaws, COI, events) use `parent` and `parent_url` front matter
+- **Screen reader focus:** On page load, focus moves programmatically to the first H2 in `.post-content`, falling back to `#main-content`, for consistent NVDA/JAWS experience
 - **External links:** Automatically open in a new tab with a screen-reader-friendly `aria-label`
 - **Forms:** Contact form backend not yet configured — see `contact.md` for TODO
-- **GitHub Pages:** Legacy build from root of `main` branch
+- **GitHub Pages:** Legacy build from root of `main` branch; `baseurl: /caostest`
+
+---
+
+## Outstanding TODOs
+
+- Wire up contact form backend (Formspree or groups.io POST URL)
+- Wire up newsletter signup on contact page (Buttondown embed)
+- Add real content to resources page
+- Add full board member bios and photos to about page
+- Add advisory board member list to about page
+- Add mailing address and EIN to support page
+- Add Form 990 link to governance page
+- Add board meeting schedule to governance page
+- Enable HTTPS enforcement on GitHub Pages settings
+- Delete legacy `docs/` folder from repo

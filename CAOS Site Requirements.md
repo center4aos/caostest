@@ -1,103 +1,114 @@
 # CAOS Site Requirements
 
-- Use Jekyll with github pages
-- Excellent accessibility -- visual contrast and font simplicity and size; screen reader structural markup with headings and landmarks; keyboard navigation. Usability is more important than compliance. We should seek and follow accessibility best practices guidance for Jekyll.
-- Simple, professional, authoritative
-- Management and maintenance should use as many Github and open-source mechanisms and tools as possible, but site management and form responses should be easy and low attention.
+*Last updated: June 2026. Items marked ✅ are complete; items marked 🔲 are still pending.*
 
-## Possible Resources for site implementation
+## Core Requirements
 
-* Blog -- https://trstringer.com/blog-hosting-details/
-* accessible Jekyll -- https://jekyllhub.com/tutorial/2026/05/29/jekyll-accessibility-wcag/
-
-* Github pages calendar
-* Github pages and forms
+- ✅ Use Jekyll with GitHub Pages
+- ✅ Excellent accessibility: visual contrast, font simplicity and size; screen reader structural markup with headings and landmarks; keyboard navigation; programmatic focus management on page load. Usability is more important than compliance.
+- ✅ Simple, professional, authoritative visual design
+- ✅ Management and maintenance uses GitHub and open-source mechanisms; site management and form responses should be easy and low attention.
 
 ## Site Map
 
-### primary pages
+### Primary Pages
 
-* CAOS Home
-* [build list from content outline section below]
+- ✅ CAOS Home
+- ✅ About CAOS
+- ✅ Projects of Interest
+- ✅ Resources
+- ✅ Governance
+- ✅ Support CAOS
+- ✅ Contact
+- ✅ Blog
+- ✅ Calendar
+- ✅ Accessibility Statement
+- ✅ Bylaws (child of Governance)
+- ✅ Conflict of Interest Policy (child of Governance)
 
-### General Wire Frame -- applies to all pages
+### General Wire Frame — applies to all pages
 
-* Page title -- Center for Accessibility and Open Source -- [current page]
-* Navigation bar -- Tab-style major page links with the current page not being a link and having a visual indicator of current page.
- * Breadcrumbs
-* Subtitle -- h2 simplified page name
-* 1-2 sentence description in simple language of page contents.
-* H3+ and short paragraphs and lists with links of relevant content.  Graphics to help break up text blocks. Child pages to keep page content from getting overwhelming.
-* Footer -- social media links and contact, Donate button, Accessibility Statement, License
+- ✅ Page title — Center for Accessibility and Open Source — [current page]
+- ✅ Navigation bar — tab-style major page links with current page indicated visually and to screen readers (`aria-current`)
+- ✅ Skip to main content link
+- ✅ Breadcrumbs for child pages
+- ✅ H1 page title rendered by layout; H2 as first content heading
+- ✅ Screen reader focus initializes on first H2 on page load
+- ✅ Footer: social media links, donate, accessibility statement, license
+
+---
 
 ## Page Structures
 
-[leading with home, but not necessarily in this order in the nav bar ]
+### Home
 
-### Home 
-
-* h2 Succinct mission
-* 2 sentences about CAOS
-* CAOS Blog (using Github mechanisms for contribution and maintenance).
-* CAOS Calendar (using Github mechanisms)
-* CAOS Newsletter (subscribe form using Github mechanisms)
-
+- ✅ H2 succinct mission statement
+- ✅ 2-sentence description of CAOS
+- ✅ CAOS Blog preview (3 most recent posts, link to full blog)
+- ✅ CAOS Calendar preview (upcoming events, link to full calendar)
+- ✅ Newsletter subscribe form (Buttondown)
 
 ### About CAOS
 
-* Brief statement about being an open-source organization led by people with disabilities to promote open-source accessibility.
-* Mission Statement
-* Short paragraph about CAOS origin.
-* Bios and images of officers and board members with headings
-* Brief description of Advisory Board and list of Advisory Board members
+- ✅ Brief statement: open-source organization led by people with disabilities to promote open-source accessibility
+- ✅ Mission statement
+- ✅ Short paragraph on CAOS origin
+- ✅ Board member bios with headings
+- 🔲 Board member photos
+- 🔲 Advisory board description and member list
 
-### Resources 
+### Resources
 
-* Statement about CAOS helping open-source communities learn about disability and accessibility in order to make their communities and projects more accessible.
-* Statement about CAOS facilitating a global network of open-source and disability resources and communities
-* Headings and 1-sentence descriptions of online open-source accessibility and tech-related disability resources to help with that.
+- ✅ Page structure, headings, and framing text in place
+- 🔲 Actual resource listings with one-sentence descriptions (accessibility standards, open-source tools, disability/tech communities, learning/training)
 
 ### Governance
 
-* CAOS is a 501-C(3) organization in California
-* Transparency statement
-* Bylaws (link)
-* Conflict of Interest Policy (link)
-* 990 (link)
-* Schedule of board meetings
+- ✅ 501(c)(3) statement
+- ✅ Transparency statement
+- ✅ Bylaws link
+- ✅ Conflict of Interest Policy link
+- 🔲 Form 990 link
+- 🔲 Board meeting schedule
 
 ### Contact
 
-* We want to hear from you, keep in touch, and welcome your contributions.
-* Contact Us form requiring email, name, Subject line, body (no links), and dropdown topic line that includes
-** Seeking advice on open-source accessibility
-** Partnership proposal
-** Seeking support 
-** Media inquiry
-** Advisory Board
-** Donation
-* Snailmail address
-* Newsletter signup
+- ✅ Page structure and framing text
+- ✅ Contact form fields: name, email, subject, topic dropdown, message body
+  - Topics: Seeking advice, Partnership proposal, Seeking support, Media inquiry, Advisory Board, Donation
+- 🔲 Contact form backend (Formspree or groups.io POST URL)
+- 🔲 Newsletter signup embed on contact page (Buttondown)
+- 🔲 Snail mail address
 
 ### Support CAOS
 
-* CAOS is a non-profit primarily funded by generous donations from individuals and organizations who believe in the importance of our mission. Please join with us and them to help make the world more accessible through open source accessibility.
-* Many ways to give:
-** paypal
-** Venmo
-** Zell
-** Benevity
-** Planned giving (sample language)
-** Check (payable to, to address)
-
-* or reach out to discuss how you'd like to contribute (giving@caos.org)
-* EIN and other legal info
+- ✅ Mission-framed donation intro
+- ✅ PayPal, Venmo, Zelle, Benevity, planned giving language, check instructions
+- ✅ giving@caos.org contact
+- 🔲 Mailing address
+- 🔲 EIN
 
 ### Projects of Interest
 
-* Open source and accessibility is a big world and we can't collaborate with everyone at once. We have a set of open-source and disability communities with whom we have active relationships. Our partnership priorities stem from our strategic plan as informed by the 2027 Open-Source Accessibility Needs Assessment.
-Active partnerships and collaborations include:
-** CREATE
-** Teach Access
-** NVAccess
-** 
+- ✅ Framing text about partnership priorities and strategic plan
+- ✅ CREATE (UW)
+- ✅ Teach Access
+- ✅ NV Access / NVDA
+- 🔲 Additional partners as relationships develop
+
+---
+
+## Technical Implementation Notes
+
+- **Internal links:** Always use `{{ "/path/" | relative_url }}` — never hardcode `/caostest/` or bare root-relative paths, so links survive migration to domain root.
+- **Blog:** `_posts/YYYY-MM-DD-title.md` with `layout: post`
+- **Events:** `_events/YYYY-MM-DD-title.md` with `layout: event`; past events drop off calendar automatically on each build
+- **Forms:** backend not yet wired up
+- **GitHub Pages:** Legacy build, `baseurl: /caostest`; migration to domain root requires changing `baseurl: ""` in `_config.yml`
+
+---
+
+## Resources Used in Implementation
+
+- Blog setup reference: https://trstringer.com/blog-hosting-details/
+- Accessible Jekyll reference: https://jekyllhub.com/tutorial/2026/05/29/jekyll-accessibility-wcag/
