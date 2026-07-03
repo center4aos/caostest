@@ -23,8 +23,9 @@
 - ✅ Blog
 - ✅ Calendar
 - ✅ Accessibility Statement
-- ✅ Bylaws (child of Governance)
-- ✅ Conflict of Interest Policy (child of Governance)
+- 🔲 Policy Library (child of Governance; served from the governance repo submodule — see Governance Repository Integration). Retires the standalone Bylaws and Conflict of Interest Policy pages below, which move into the Policy Library alongside other policies.
+- ~~Bylaws (child of Governance)~~ — retiring; content moves into the Policy Library
+- ~~Conflict of Interest Policy (child of Governance)~~ — retiring; content moves into the Policy Library
 
 ### General Wire Frame — applies to all pages
 
@@ -67,11 +68,10 @@
 
 - ✅ 501(c)(3) statement
 - ✅ Transparency statement
-- ✅ Bylaws link
-- ✅ Conflict of Interest Policy link
+- ~~Bylaws link~~ / ~~Conflict of Interest Policy link~~ — retiring in favor of a single Policy Library link (below); the standalone `bylaws.md` and `conflict-of-interest.md` pages are being removed
 - 🔲 Form 990 link
 - 🔲 Board meeting schedule
-- 🔲 Full governance policy library served from governance repository via git submodule (see Technical Implementation Notes)
+- 🔲 Single link to the Policy Library, replacing the two links above, pointing into the governance repository submodule (see Governance Repository Integration)
 
 ### Contact
 
@@ -108,105 +108,376 @@
 - **Events:** `_events/YYYY-MM-DD-title.md` with `layout: event`; past events drop off calendar automatically on each build
 - **Forms:** backend not yet wired up
 - **GitHub Pages:** Legacy build, `baseurl: /caostest`; migration to domain root requires changing `baseurl: ""` in `_config.yml`
+- **Repo identity:** Add `repo: center4aos/caostest` to `_config.yml` as the single source of truth for the main repo's GitHub path (used by the footer/registry lookup below). **Verified:** grepping `_includes`/`_layouts` today turns up zero hardcoded occurrences of `caostest`/`center4aos` — the only places that string appears are `_config.yml`'s `baseurl` (a separate setting, governing URL paths not repo identity) and `README.md` (excluded from the build, plain dev documentation). So as long as templates only ever read `site.repo` and never hardcode the literal name, one value is genuinely sufficient here — this isn't an uncertain platform behavior, just an implementation-discipline check.
+- **Migration checklist (one-time, do together):** when the repo is eventually renamed and the site moves to its permanent domain, update in the same pass: `baseurl` (above), `repo` (this line), and `README.md`'s hardcoded live-site URL and org links. GitHub's own repo-rename redirects are a safety net if any of these lag briefly, but shouldn't be relied on long-term.
+- **Known small bug, unrelated to this work:** `_includes/footer.html` references `site.github_username`, which is never set in `_config.yml` — the "Connect → GitHub" footer link currently silently fails to render. Worth a one-line fix whenever footer.html is next touched.
 
 ---
 
 ## Governance Repository Integration
 
-### Architecture
+### Decisions
 
-The CAOS governance repository (`center4aos/governance` on GitHub) is a standalone Git repository containing all organizational policies, decision records, meeting notes, and related documents. Rather than duplicating this content in the main website repo or maintaining a separate Jekyll site, the governance repo is included in the main website repo as a **git submodule** mounted at `/governance/`.
+- **Mount path:** The submodule mounts at `/governance/library/`, *not* `/governance/` — [`governance.md`](governance.md) already exists as a real page there (501(c)(3) statement, Form 990, board meetings) and would collide with a submodule mounted at the same path. `governance.md` is unchanged except for a new link into the Policy Library.
+- **Scalable registry:** All external-repo metadata lives in one data file, `_data/external_repos.yml`, keyed by a short identifier. `_config.yml` `defaults:` blocks only tag a path with that key (`external_repo: governance`); footer and breadcrumb includes look up the rest. Adding a second external repo later means one data-file entry + one config scope block — no template or Liquid changes.
+- **Navigation:** No top-level nav entry for `/governance/library/` or any future external mount. Reachable only via a link from an existing page (here, `governance.md`) plus breadcrumbs/direct URL. This is a standing policy for all future external-repo integrations, not a governance-specific exception.
+- **Automation:** Submodule updates are automated via GitHub Actions from day one, using a two-part pattern designed to scale to additional repos without touching central logic (see below).
 
-Jekyll renders governance markdown files as full site pages using the same layouts, nav bar, header, and footer as the rest of the site. No separate theme or site structure is needed for governance pages.
+### `_data/external_repos.yml` schema
+
+```yaml
+governance:
+  path: governance/library      # where the submodule is mounted in this repo; also the site sub-path
+  repo: center4aos/governance   # GitHub repo the submodule tracks, and where issues are filed
+  ancestors:
+    - title: Governance
+      url: /governance/
+    - title: Policy Library
+      url: /governance/library/
+```
+
+No `issue_template` field — see "Suggest a change" decisions below for why template filenames are deliberately *not* tracked in this registry.
 
 ### Setup steps
 
-1. Add the governance repo as a submodule in the main website repo:
-   ```
-   git submodule add https://github.com/center4aos/governance governance
-   ```
-2. Add a `defaults:` block to `_config.yml` to apply Jekyll frontmatter to all files in the `governance/` directory without modifying the source files:
+1. `git submodule add https://github.com/center4aos/governance governance/library`
+2. Add the entry above to `_data/external_repos.yml`.
+3. Add to `_config.yml`:
    ```yaml
    defaults:
      - scope:
-         path: "governance"
+         path: "governance/library"
        values:
          layout: page
-         github_repo: center4aos/governance
-         issue_template: policy-issue.md
+         external_repo: governance
    ```
-3. Ensure the governance submodule is updated on each site build (GitHub Actions workflow or manual `git submodule update --remote` before push).
-4. Add a governance index page at `governance/index.md` (or `governance/index.html`) listing all policy documents with links.
+4. Extend `_includes/breadcrumbs.html`, `_includes/footer.html`, and `_layouts/page.html`/`default.html` to look up `page.external_repo` in `site.data.external_repos` and `site.data.external_repo_pages` (patterns below and in "External Repo Page Index & Titles").
+5. Add `_external_repo_pages/governance.md` in this repo (not inside the submodule) with `permalink: /governance/library/`, looping over the generated page-index data to render the listing — see "External Repo Page Index & Titles" below.
+6. Update `governance.md` to link to the new Policy Library.
 
-### Submodule update workflow
+### Footer/breadcrumb lookup pattern
 
-When governance documents are updated in the governance repo, the main website repo must be updated to point to the new commit:
-
-```
-git submodule update --remote governance
-git add governance
-git commit -m "Update governance submodule"
-git push
+```liquid
+{% assign ext = site.data.external_repos[page.external_repo] %}
+{% assign repo = ext.repo | default: site.repo %}
 ```
 
-This can be automated with a GitHub Actions workflow triggered by pushes to the governance repo's `main` branch.
+`ext.ancestors` supplies `page.ancestors` for every document in this repo — see "Breadcrumb Architecture" below for the full mechanism, which replaces the old single `parent:`/`parent_url:` frontmatter model entirely (that model is retired along with `bylaws.md`/`conflict-of-interest.md`, the only two pages that used it).
 
-### Open questions — governance repo integration
+### Automation design (scalable)
 
-- **Automation:** Should submodule updates be automated via GitHub Actions, or handled manually before each site build? Automated is lower-friction but requires a workflow to be set up and a deploy key or PAT with write access to the main repo.
-- **Governance index page:** What should the governance landing page look like? A simple list of policy documents? Grouped by category? With one-line descriptions? This page lives in the main website repo, not the governance repo.
-- **Frontmatter in governance files:** The `_config.yml` defaults approach avoids adding Jekyll frontmatter to governance markdown files, keeping them clean for non-web use. Verify this approach works as expected with the current Jekyll version on GitHub Pages before committing to it.
-- **Navigation:** Should individual governance/policy pages appear in the site nav, or only be reachable from the Governance landing page and direct links? Current assumption is the latter.
-- **Breadcrumbs:** Governance pages should show breadcrumbs like "Home > Governance > Conflict of Interest Policy." Verify the current breadcrumb implementation handles submodule-served pages correctly.
+Two-part GitHub Actions pattern so adding a new external repo never touches the central update logic:
+
+1. **In each external repo** (governance, and any future one) — a small workflow, copied and parameterized per repo, firing on push to `main`:
+   ```yaml
+   # governance repo: .github/workflows/notify-site.yml
+   on:
+     push:
+       branches: [main]
+   jobs:
+     notify:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: peter-evans/repository-dispatch@v3
+           with:
+             token: ${{ secrets.SITE_DISPATCH_TOKEN }}
+             repository: center4aos/caostest
+             event-type: submodule-updated
+             client-payload: '{"path": "governance/library", "key": "governance"}'
+   ```
+2. **In caostest** (this repo) — one reusable workflow handling the dispatch for any repo:
+   ```yaml
+   # .github/workflows/update-submodule.yml
+   on:
+     repository_dispatch:
+       types: [submodule-updated]
+   jobs:
+     update:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+           with:
+             submodules: recursive
+             token: ${{ secrets.GITHUB_TOKEN }}
+         - run: |
+             git submodule update --remote ${{ github.event.client_payload.path }}
+             ruby script/sync-external-repo-pages.rb --key ${{ github.event.client_payload.key }} --path ${{ github.event.client_payload.path }}
+             git config user.name "github-actions[bot]"
+             git config user.email "github-actions[bot]@users.noreply.github.com"
+             git add ${{ github.event.client_payload.path }} _data/external_repo_pages/${{ github.event.client_payload.key }}.yml
+             git commit -m "Update ${{ github.event.client_payload.path }} submodule" || echo "No changes"
+             git push
+   ```
+   `sync-external-repo-pages.rb` is the single script that both extracts page titles and skips `_`/`.`-prefixed files and folders in one pass — see "External Repo Page Index & Titles" below. Nothing here touches `_config.yml`.
+
+Adding a second external repo later means copying the ~10-line trigger workflow into that repo with its own `path`/`key` values and a dispatch-token secret — nothing in caostest's workflow changes.
+
+### Requirement discovered by testing: governance docs need a minimal empty frontmatter marker
+
+**Verified, and this changes a stated assumption:** using `bundle exec ruby` to load this repo's actual site (Jekyll 3.9.3) with a test `defaults:` scope block, a file with *zero* frontmatter markers is classified by Jekyll as a **static file**, not a page — it gets copied to the output directory untouched, with no layout, no nav/footer, no breadcrumb, and none of the `_config.yml` `defaults:` values (`layout`, `external_repo`) applied at all. A file with only an *empty* frontmatter block (`---` / `---`, no fields) is correctly picked up as a real page with defaults applied exactly as designed.
+
+So "governance markdown files need no frontmatter" (stated earlier as a benefit of the `defaults:` approach) isn't quite right — every document in the governance repo needs at minimum the two-line empty frontmatter delimiter to be treated as a page at all:
+```
+---
+---
+# Actual document content starts here
+```
+This costs little against the original "keep them clean for non-web use" goal: GitHub's own markdown renderer already recognizes and hides YAML frontmatter blocks, even empty ones, so this is invisible when viewing the file directly in the governance repo's GitHub UI — it only affects Jekyll's own file classification. This is a new, small requirement on the governance repo's authoring convention, not something caostest's automation can paper over (rewriting files inside a pinned submodule commit was already ruled out earlier as fragile).
+
+(Exclusions are now handled by Jekyll's native `_`/`.`-prefix convention — see "External Repo Content Exclusions" below — rather than a dedicated exclusions file, but the file tested at the time, `web-exclusions.md`, correctly confirmed the same underlying point: a file with no frontmatter is never treated as a page.)
+
+**Re-verified more rigorously with a real submodule:** the initial test above used plain directories standing in for a submodule. As a follow-up, a genuine throwaway git repo was committed and added as an actual git submodule (confirmed via `git ls-files -s` showing a real `160000` gitlink), then a full `site.process` build (not just `site.read`) was run and the generated HTML inspected directly. Both a top-level and a nested-one-folder-deep document — each with only the minimal empty frontmatter — rendered as complete pages: full header, nav bar, breadcrumb shell, footer, and correctly converted markdown content, identically to any ordinary page. This confirms the mechanism works through an actual submodule, at multiple nesting depths, with real end-to-end rendering — not just correct data classification. (It also surfaced a related gap in the title-fallback mechanism — see "Title fallback for individual documents" below.)
+
+---
+
+## External Repo Content Exclusions
+
+### Purpose
+
+An external repo mounted into the site (governance, or any future one) may contain files that shouldn't clutter the site as browsable pages — issue templates, policy-drafting templates, and similar ancillary documents. **This is a curation concern, not a privacy one:** every mounted repo is fully public; anything genuinely non-public stays in a separate repo that is never mounted onto the website at all.
+
+### Decision: no custom exclusions file — use Jekyll's own underscore/dot convention
+
+**Verified by testing:** a file or directory whose name starts with `_` or `.` is invisible to Jekyll's build entirely — not rendered as a page, not even copied as a static file — confirmed empirically at a nested depth inside an actual mounted submodule path (not just at the site root). This was also checked for a specific collision risk: a folder nested deep inside the mount and literally named `_data` (colliding with Jekyll's own special top-level directory name) was *not* mistakenly picked up as `site.data` — Jekyll's special-directory readers only look at the fixed top-level locations relative to the site root, so a governance contributor naming a folder `_data` or `_posts` for their own reasons triggers no surprising behavior; it's just skipped like any other underscore-prefixed folder.
+
+This is stronger than the exclusion originally planned (which only needed to keep something out of the *browsable listing*, not out of the build) and it requires no custom file, format, or parsing logic at all. **The governance repo convention is simply: prefix any file or folder you don't want on the website with `_` or `.`** — e.g. `_internal-notes/`, `_2026-06-strategy-draft.md`. This applies uniformly to every entry in `_data/external_repos.yml`, not just governance, and needs no documentation beyond "this is a standard Jekyll convention."
+
+One trade-off worth naming: this is less self-documenting than a dedicated exclusions file would have been — there's no single place to see everything excluded with a reason attached, just folder/file names that are hopefully self-explanatory on their own.
+
+### How it's applied
+
+Jekyll's own build already handles this natively — no `_config.yml` involvement needed. The one thing that does need updating: `script/sync-external-repo-pages.rb` (see "External Repo Page Index & Titles" below) does its own independent filesystem walk to build the title/listing data, separate from Jekyll's own build, so it needs to skip `_`/`.`-prefixed entries itself using the identical rule — otherwise the generated listing could link to a document Jekyll itself won't render. Because both places enforce the exact same simple rule, they can't drift out of sync with each other the way a separately-parsed blacklist file could have.
+
+---
+
+## External Repo Page Index & Titles
+
+### Purpose
+
+Jekyll doesn't auto-generate directory listings — a URL like `/governance/library/` needs an actual page to render, or it 404s. And since submodule content deliberately carries no Jekyll frontmatter (kept clean for non-web use), individual documents have no `page.title` for their own H1, browser-tab title, or breadcrumb either. Both problems are solved by one generated data file per external repo, produced by the same automation that bumps the submodule pointer.
+
+### Generated data file — hierarchical, mirroring directory structure
+
+**Decision (superseding the earlier nested-list design):** the listing uses a hierarchical **heading structure with lists as content**, not nested `<ul>` lists. The page's H1 (from the layout) is the mount's title (e.g. "Policy Library"); immediately below the nav bar, an H2 repeats that same title as the first content heading — matching the exact convention already used everywhere else on the site (e.g. `governance.md`'s `# Governance` / `## Governance`), which is also what the "focus jumps to first H2 on page load" accessibility behavior depends on. Each directory becomes a heading one level deeper than its parent (H3 for directories at the mount root, H4 for their subdirectories, and so on), followed by a plain list of links to the files directly in that directory. A repo with no subdirectories produces just the H2 with a flat file list beneath it — no directory headings at all.
+
+**Heading-depth cap:** only H3–H6 are available for directory nesting (H1/H2 are already spoken for), so a maximum of four folder levels can get their own distinct heading. Beyond that, nesting continues to render as H6 rather than erroring — a practical limit expected to comfortably cover a policy library, not a hard architectural ceiling.
+
+**Correct handling of directories with no direct files but non-empty descendants:** omitting a directory's heading whenever it happens to have no files *directly* in it would skip a heading level for whatever's nested beneath it (e.g. jumping from H2 straight to H4) — a real accessibility defect, since screen reader users navigate by heading level and rely on levels never being skipped. So "empty" is defined recursively: a directory is only pruned from the tree (and omitted from the page) if it and *all* its descendants contain zero files. A directory with no direct files but a non-empty subdirectory is kept in the tree and still gets its own heading rendered — just with no file list directly under it, falling straight through to its subsection's heading — to keep the nesting correct.
+
+`script/sync-external-repo-pages.rb` (run by `update-submodule.yml` after each submodule bump) walks a repo's mounted files recursively and builds a tree, skipping any file or folder whose name starts with `_` or `.` (matching Jekyll's own native exclusion rule — if a whole directory is skipped this way, its subtree isn't walked at all; a directory is pruned per the recursive "empty" rule above, not merely for lacking direct files). Each node is either:
+- a **file** node: `{type: file, title, path, url}` — title from the file's first `# H1` line (if multiple H1s exist, the first one wins; later ones are ignored), falling back to a filename-derived title (e.g. `strategic-plan-2026.md` → "Strategic Plan 2026") if no H1 is found. The extracted heading line is run through Kramdown (already a site dependency) and the resulting HTML tags stripped, so inline formatting in the heading — links, bold/italic, code spans — resolves to plain readable text (`# [Bylaws](#anchor)` → "Bylaws") instead of leaking raw markdown syntax into the H1, breadcrumb, tab title, and listing.
+- a **directory** node: `{type: directory, name, children: [...]}` — `name` is a humanized version of the folder name (same filename→title transform as above: hyphens/underscores become spaces), `children` is the same node structure, recursively. **Capitalization rule:** only words that are entirely lowercase get their first letter capitalized; any word that already has a capital letter is left untouched. This handles acronyms for free without a maintained dictionary — naming a folder `COI-amendments` produces "COI Amendments," while `coi-amendments` produces "Coi Amendments" — giving governance authors an implicit way to control the exact display name just by how they capitalize the folder name, no extra config or frontmatter needed. (Minor words like "of"/"the" are not specially lowercased — not worth the added complexity for a small, curated policy library.)
+
+The result is written to `_data/external_repo_pages/<key>.yml` (e.g. `_data/external_repo_pages/governance.yml`), keyed the same way as `_data/external_repos.yml`. The file has two top-level keys: `tree` (the nested node structure above, used only by the listing page's recursive render) and **`flat`**, a simple `{relative_path: title}` map covering every included file, used for the per-page lookups below — a nested tree is awkward for Liquid to search when all it needs is "the title for this one page," so the same generation pass also emits the flat form to make that a single lookup instead of a recursive walk.
+
+### The listing/index page
+
+The hand-written index page for a mount (e.g. `/governance/library/`) can't physically live inside the submodule's own path — a submodule mount claims that entire directory as a gitlink, so a regular file from caostest can't coexist there. Instead it lives in **this repo**, e.g. `_external_repo_pages/governance.md`, using Jekyll's `permalink: /governance/library/` frontmatter to render at the mount's URL regardless of physical location.
+
+It renders the tree via a **recursive Jekyll include** (`_includes/external-repo-listing.html`) that calls itself once per directory level, tracking the current heading level as it descends. Files at the current level are listed first (per the agreed ordering — a level's own files before its subsections), then each subdirectory's heading and contents follow:
+
+```liquid
+<!-- _includes/external-repo-listing.html — expects include.nodes (array) and include.level (heading level for directories found at this depth) -->
+{% assign files = include.nodes | where: "type", "file" %}
+{% assign dirs = include.nodes | where: "type", "directory" %}
+
+{% if files.size > 0 %}
+<ul>
+  {% for file in files %}
+    <li><a href="{{ file.url | relative_url }}">{{ file.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% for dir in dirs %}
+  {% assign heading_level = include.level | at_most: 6 %}
+  <h{{ heading_level }}>{{ dir.name }}</h{{ heading_level }}>
+  {% assign next_level = include.level | plus: 1 %}
+  {% include external-repo-listing.html nodes=dir.children level=next_level %}
+{% endfor %}
+```
+
+called from the index page itself, right after the H2, with `{% include external-repo-listing.html nodes=site.data.external_repo_pages.governance.tree level=3 %}` — starting at level 3 since H1/H2 are already used by the page's own title. This one recursive include is shared by every external repo mount — a repo with deeply nested folders needs no extra per-directory page or template; the whole tree, at any depth (up to the H6 cap above), renders on the single mount-root listing page. Always current, no manual edit needed when documents are added, renamed, or removed.
+
+**Standing convention:** external repos (governance, and any future one) must not include their own `index.md` at the root of their mounted content — that would collide with this permalink-targeted page's output.
+
+**Standing rule:** this index page's own frontmatter must never set `external_repo: governance` (or any registry key), even though it's "about" governance content. Left unset, `page.external_repo` naturally stays nil for it (since it physically lives outside the `governance/library` path that the `_config.yml` defaults scope matches), so the "Suggest a change" footer link on this page correctly falls back to `site.repo` (caostest) — a bug in the listing page itself is caostest's responsibility, not the governance repo's. See "Submit an Issue Footer Link" below.
+
+### Title fallback for individual documents
+
+**Verified end-to-end by testing:** a full site build against a real (throwaway) git submodule, with only the minimal empty-frontmatter files described above, confirmed the whole pipeline renders correctly — real header/nav/footer/breadcrumb shell, markdown converted to HTML, at both a top-level and a nested-one-folder-deep path. But it also rendered two elements empty, `<h1 class="post-title"></h1>` and the breadcrumb's current-page `<span aria-current="page"></span>`, because `page.title` is nil without frontmatter — confirming the fallback below isn't optional polish, it's required for these pages to be usable at all.
+
+`_layouts/page.html` (or `default.html`) **and** `_includes/breadcrumbs.html` both need the identical fallback: look up a page's title from `site.data.external_repo_pages[page.external_repo].flat[relative_path]` — `relative_path` being `page.path` with the registry's mount `path` prefix stripped — whenever `page.external_repo` is set and `page.title` is blank. Ordinary site pages, which always carry their own `title:` frontmatter, are unaffected. (The original design only named `_layouts/page.html`/`default.html`; testing showed breadcrumbs.html reads `page.title` independently for its current-page crumb and needs the same lookup, or that crumb stays blank even after the H1 is fixed.)
+
+### SEO/browser-tab title — decided and tested
+
+`jekyll-seo-tag` (the `{% seo %}` tag generating `<title>` and Open Graph metadata) reads `page.title` directly at the Ruby level, before any of our Liquid template logic runs — a `{% assign %}` in our own layout can't retroactively change what that plugin sees. Without a fix, every governance document's browser tab, bookmark default name, and social-share preview would show the generic site title instead of the document's own — a real usability problem, not just cosmetic (screen reader users switching browser tabs rely on the tab title being announced to tell tabs apart).
+
+**Decision:** bypass `{% seo %}` for external-repo pages specifically and hand-roll the same tags using the resolved title from `_data/external_repo_pages/<key>.yml`'s `flat` map — no new frontmatter requirement on any content file, since it reuses the exact same title data already generated for the H1/breadcrumb fallback.
+
+**Verified by testing:** built and tore down a temporary version of this exact change in `_layouts/default.html`, wrapping the existing `{% seo %}` call in a conditional:
+```liquid
+{% if page.external_repo %}
+  {% assign ext = site.data.external_repos[page.external_repo] %}
+  {% assign mount_path = ext.path | default: "" %}
+  {% assign relative_path = page.path | remove_first: mount_path | remove_first: "/" %}
+  {% assign resolved_title = site.data.external_repo_pages[page.external_repo].flat[relative_path] | default: site.title %}
+  <title>{{ resolved_title }} | {{ site.title | escape }}</title>
+  <meta name="description" content="{{ site.description | escape }}">
+  <meta property="og:title" content="{{ resolved_title | escape }}">
+  <meta property="og:description" content="{{ site.description | escape }}">
+{% else %}
+  {% seo %}
+{% endif %}
+```
+Building a test page through this produced `<title>Bylaws | Center for Accessibility and Open Source</title>` correctly, with no `title:` frontmatter anywhere in the source file. An ordinary page (`about.md`) built alongside it was unaffected, still producing the full normal `{% seo %}` output (canonical URL, Twitter card, `og:locale`, etc.) — confirming no regression to any existing page.
+
+No open questions remain for this section — H1 extraction (Kramdown-based, first-H1-wins) and directory-name humanization (capitalize only fully-lowercase words) are both decided above.
+
+---
+
+## Breadcrumb Architecture
+
+### Decision
+
+Breadcrumbs use a general, arbitrary-length **ancestors array** instead of the old single `parent:`/`parent_url:` frontmatter pair. This resolves the previously open "breadcrumb depth" question outright.
+
+**Key modeling choice:** for content mounted from an external repo, the repo's own listing page is the parent of every document in that repo, regardless of how deeply the document's file actually sits in the source repo's folder structure. This matches the real *page* hierarchy — there is only one browsable page per external-repo mount, since the listing page renders the whole tree recursively on itself — rather than the source repo's internal file layout, which has no pages of its own to be a parent of anything. So every document in a given external repo gets the same fixed-length ancestor chain; nothing about breadcrumbs requires the page-index generator script to compute anything.
+
+### Rendering
+
+```liquid
+<!-- _includes/breadcrumbs.html -->
+{% unless page.url == "/" %}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="{{ "/" | relative_url }}">Home</a></li>
+    {% for a in page.ancestors %}
+      <li><a href="{{ a.url | relative_url }}">{{ a.title }}</a></li>
+    {% endfor %}
+    <li><span aria-current="page">{{ page.title }}</span></li>
+  </ol>
+</nav>
+{% endunless %}
+```
+
+`page.ancestors` is an array of `{title, url}` pairs. Four sources feed it, all through the same rendering logic:
+
+| Content type | Source of `ancestors` |
+|---|---|
+| Ordinary hand-authored pages (e.g. the Policy Library listing page) | Own frontmatter |
+| Blog posts | `_config.yml` defaults, scoped by collection `type: posts` |
+| Calendar events | `_config.yml` defaults, scoped by collection `type: events` |
+| Individual documents from an external repo | `_data/external_repos.yml` registry entry's `ancestors:` list (fixed per repo, from "Governance Repository Integration" above) |
+
+### `_config.yml` additions for blog and calendar
+
+```yaml
+defaults:
+  - scope:
+      type: posts
+    values:
+      ancestors:
+        - title: Blog
+          url: /blog/
+  - scope:
+      type: events
+    values:
+      ancestors:
+        - title: Calendar
+          url: /calendar/
+```
+
+Every post and event gets its ancestor automatically — no per-file frontmatter needed. `_events/2026-07-15-board-meeting.md`'s existing hand-set `parent: Calendar` / `parent_url: /calendar/` fields are removed as part of this change, superseded by the collection-level default; future event files never need to set them at all.
+
+### The Policy Library listing page's own breadcrumb
+
+The listing page (`_external_repo_pages/governance.md`) is one level shallower than the documents it lists — it *is* the "Policy Library" step, not a child of it. It declares its own ancestors directly in frontmatter, using the registry's list minus its own final entry:
+
+```yaml
+---
+ancestors:
+  - title: Governance
+    url: /governance/
+---
+```
+
+giving Home → Governance → [Policy Library, current page]. No special-casing in the Liquid — it's an ordinary hand-authored page supplying its own `ancestors`, same as any other.
+
+### Retired: `bylaws.md` / `conflict-of-interest.md`
+
+Per the Site Map and Governance page-structure updates above, these two pages are being removed from the main site, replaced by a single link from `governance.md` into the Policy Library (which will contain both documents, plus others, inside the governance repo). They were also the only two pages using the old `parent:`/`parent_url:` fields, so `breadcrumbs.html` needs no backward-compatibility branch for that schema — the ancestors-array model is the only mechanism, from day one.
 
 ---
 
 ## "Submit an Issue" Footer Link
 
-### Purpose
+### Decisions
 
-Every page on the CAOS website includes a "Submit an Issue" link in the footer. Clicking the link opens a pre-filled GitHub issue in the correct repository, referencing the specific page the visitor was on. This provides a low-friction, accessible mechanism for any visitor to report a problem, ask a question, or propose a change — without needing to navigate GitHub independently.
-
-### Behavior by page type
-
-| Page type | Issue opens in | Template used | Pre-filled reference |
-|---|---|---|---|
-| Main site pages (home, about, blog, etc.) | `center4aos/caostest` (or successor repo) | `general.md` | Page title and URL |
-| Governance / policy pages | `center4aos/governance` | `policy-issue.md` | Policy document filename and URL |
+- **Placement — amended:** Still lives in the existing utility footer column (with Accessibility Statement / Contact / Donate), but as its own visually distinct sub-group rather than folded into that list. The two-path Q&A structure below (decided this round) is more text than a single link, so it gets a small bold label — "**Suggest a Change**" — directly above its own short list, reusing the exact `<p><strong>...</strong></p>` pattern the footer already uses for the "Connect" label. This keeps the existing Accessibility/Contact/Donate list uncluttered while still avoiding a brand-new footer column.
+- **Label:** Uniform **"Suggest a change"** site-wide (not varied per repo) for the GitHub-issue path, with an explicit `aria-label="Suggest a change (opens a GitHub issue in a new tab)"`. The site-wide external-link script in `_layouts/default.html:47-58` only sets a generic `(opens in new tab)` aria-label when one isn't already present, so this manual, more specific label is respected; `target="_blank"` / `rel="noopener noreferrer"` are still applied automatically since github.com is a different hostname.
+- **Repo source:** Driven by the `_data/external_repos.yml` registry above — `page.external_repo` is looked up, falling back to `site.repo` for ordinary site pages.
+- **Filename accuracy:** The referenced filename in the issue body has the registry's mount `path` prefix stripped before use, so it names a file that actually exists in the *target* repo rather than a caostest-only mount path (e.g. `conflict-of-interest-policy.md`, not `governance/library/conflict-of-interest-policy.md`). This also means the generated listing/index page itself (which never carries `external_repo` — see "External Repo Page Index & Titles") always reports its true caostest path and opens its issue against caostest, which is correct since that page is caostest's own code.
+- **Automatic template pickup:** The link deliberately omits a `template=` query param. Instead of us tracking a specific template filename per repo (which would go stale the moment that repo's maintainers rename or add a template), the link points at plain `.../issues/new` with `title=`/`body=` params. GitHub itself then applies whatever templates actually exist in the target repo at click-time: opens the single template directly if there's exactly one, shows its own template chooser if there are several, or a blank form if there are none — so it "automatically pulls from any issue templates the repo contains" without our config needing to know their names.
+- **Non-GitHub fallback — copy finalized:** Two short lines, each a static lead-in question followed by its own link, rather than one link carrying all the text: "Got a GitHub account? **Suggest a change**" and "No GitHub account? **Send a suggestion**." Only the bolded words are inside the `<a>` tag; the questions are plain static text, keeping each line short despite there being two of them. The second link points to `/contact/?context=...` with the same page/repo reference URL-encoded; the contact page reads that query param on load, populates a new hidden form field (`page_context`), and pre-selects a new contact-form topic option, **"Website feedback or issue report,"** added to the existing dropdown in `contact.md`.
 
 ### Implementation
 
-The footer include (`_includes/footer.html` or equivalent) constructs the GitHub new-issue URL dynamically using Jekyll Liquid variables:
-
 ```liquid
-{% assign repo = page.github_repo | default: "center4aos/caostest" %}
-{% assign template = page.issue_template | default: "general.md" %}
+{% assign ext = site.data.external_repos[page.external_repo] %}
+{% assign repo = ext.repo | default: site.repo %}
+{% assign mount_path = ext.path | default: "" %}
+{% assign relative_path = page.path | remove_first: mount_path | remove_first: "/" %}
 {% assign issue_title = "Issue: " | append: page.title | url_encode %}
-{% assign issue_body = "**Page:** [" | append: page.title | append: "](https://caos.org" | append: page.url | append: ")\n**File:** `" | append: page.path | append: "`\n\n[Describe your issue here]" | url_encode %}
+{% assign page_url = site.url | append: page.url %}
+{% assign issue_body = "**Page:** [" | append: page.title | append: "](" | append: page_url | append: ")\n**File:** `" | append: relative_path | append: "`\n\n[Describe your issue here]" | url_encode %}
+{% assign context_param = page.title | append: " -- " | append: page_url | url_encode %}
 
-<a href="https://github.com/{{ repo }}/issues/new?template={{ template }}&title={{ issue_title }}&body={{ issue_body }}">
-  Submit an Issue
-</a>
+<p class="footer-feedback-heading"><strong>Suggest a Change</strong></p>
+<ul class="footer-feedback-list">
+  <li>Got a GitHub account?
+    <a href="https://github.com/{{ repo }}/issues/new?title={{ issue_title }}&body={{ issue_body }}"
+       aria-label="Suggest a change (opens a GitHub issue in a new tab)">
+      Suggest a change
+    </a>
+  </li>
+  <li>No GitHub account?
+    <a href="{{ "/contact/" | relative_url }}?context={{ context_param }}">
+      Send a suggestion
+    </a>
+  </li>
+</ul>
 ```
 
-The `github_repo` and `issue_template` values are set per page type via `_config.yml` defaults (see Governance Repository Integration above). Main site pages inherit the defaults; governance pages get the governance repo values automatically.
+This block sits in the same footer column as the existing Accessibility Statement / Contact / Donate list, placed as its own labeled group rather than appended to that list — see "Placement — amended" above.
 
-### Issue template coordination
+**Known GitHub platform limitation:** `title=`/`body=` query params reliably pre-fill classic single-textarea Markdown issue templates. If a target repo uses the newer YAML-based issue *forms* (multiple structured fields), GitHub does not support pre-filling those fields via `title=`/`body=` — the visitor lands on the chooser/form with our context only in the (still pre-filled) title, not the body. This is a constraint of GitHub's own URL API, not something our Liquid can work around; worth checking which template style `center4aos/governance` actually uses once its templates exist.
 
-The pre-filled issue body should align with the field structure of the target template so that the pre-filled content lands in the right section. Specifically:
+On `contact.md`, a new hidden field:
+```html
+<input type="hidden" id="contact-page-context" name="page_context" data-fs-field>
+```
+and page-load script:
+```js
+var params = new URLSearchParams(window.location.search);
+var context = params.get('context');
+if (context) {
+  document.getElementById('contact-page-context').value = context;
+  document.getElementById('contact-topic').value = 'website-feedback';
+}
+```
+and a new topic option in `<select id="contact-topic">`:
+```html
+<option value="website-feedback">Website feedback or issue report</option>
+```
 
-- For `policy-issue.md`: the pre-filled body should populate the "Which policy does this relate to?" field
-- For `general.md`: the pre-filled body should populate the "What's on your mind?" field
+### Issue templates are each repo's own concern
 
-Review both templates against the Liquid-generated body format during implementation to confirm alignment.
+Because the link no longer names a specific template file, no template filename needs to be created, registered, or kept in sync anywhere in this repo's config. Each target repo (`center4aos/caostest`, `center4aos/governance`, and any future one) is free to add, rename, or drop its own `.github/ISSUE_TEMPLATE/` files independently — the footer link keeps working either way. Neither repo has any issue templates yet today; adding some is optional polish for each repo's own maintainers, not a dependency of this feature.
 
-### Open questions — Submit an Issue footer link
+**Verified:** `page.path` for `_posts`/`_events` collection items does resolve to a meaningful relative source path in Liquid — confirmed by loading this repo's actual site with `bundle exec ruby` (Jekyll 3.9.3, the version pinned via the `github-pages` gem) and inspecting what `to_liquid` exposes as `"path"`: `_posts/2026-06-25-new-caos-web-site.md` for the existing blog post, `_events/2026-07-15-board-meeting.md` for the existing board-meeting event. (Note: the raw Ruby `Document#path` accessor returns an *absolute* filesystem path — a red herring if you check it that way — but `{{ page.path }}` as seen by Liquid templates is always the relative path, matching what ordinary pages like `governance.md` already show.) No changes needed to reach this conclusion; the `remove_first: mount_path` stripping described above is a no-op for posts/events, which is correct since they have no `external_repo`/mount prefix to strip in the first place.
 
-- **Link placement:** Where exactly in the footer does this link appear? Current footer has social links, donate, accessibility statement, and license. Proposed addition should be visually and semantically grouped logically — probably near the accessibility statement.
-- **Link label:** "Submit an Issue" is clear for GitHub-familiar users. Is it clear enough for a general audience? Alternatives: "Give feedback," "Report a problem," "Suggest a change." Consider whether the label should vary by page type (e.g., "Suggest a policy change" on governance pages).
-- **Post-migration repo name:** The main site is currently `center4aos/caostest`. After migration to the primary domain, the repo name may change. The default `github_repo` value in the footer Liquid will need to be updated at that time.
-- **Unauthenticated users:** Clicking the link opens GitHub's new issue form. Users who are not logged into GitHub will be prompted to sign in or create an account before submitting. This is a real friction point for non-GitHub users. The footer link should complement — not replace — the email-based alternative described in CONTRIBUTING.md.
-- **Blog and calendar posts:** Individual blog posts and calendar events are generated from `_posts/` and `_events/`. Verify that `page.path` correctly resolves to the source file path (e.g., `_posts/2026-06-30-title.md`) for these page types, so the pre-filled reference is meaningful.
+No open questions remain for this section — placement, both link labels, and the two-path structure are all decided above.
 
 ---
 
