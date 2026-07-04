@@ -6,6 +6,8 @@ description: >-
   to promote open-source accessibility worldwide.
 baseurl: "/caostest"
 url: "https://caos.org"
+repo: center4aos/caostest
+github_username: center4aos
 
 theme: minima
 

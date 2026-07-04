@@ -30,6 +30,31 @@
           <li><a href="{{ "/contact" | relative_url }}">Contact</a></li>
           <li><a href="{{ "/support" | relative_url }}">Donate</a></li>
         </ul>
+
+        {% assign ext = site.data.external_repos[page.external_repo] %}
+        {% assign repo = ext.repo | default: site.repo %}
+        {% assign mount_path = ext.path | default: "" %}
+        {% assign relative_path = page.path | remove_first: mount_path | remove_first: "/" %}
+        {% assign issue_title = "Issue: " | append: page.title | url_encode %}
+        {% assign page_url = site.url | append: page.url %}
+        {% assign issue_body = "**Page:** [" | append: page.title | append: "](" | append: page_url | append: ")\n**File:** `" | append: relative_path | append: "`\n\n[Describe your issue here]" | url_encode %}
+        {% assign context_param = page.title | append: " -- " | append: page_url | url_encode %}
+
+        <p class="footer-feedback-heading"><strong>Suggest a Change</strong></p>
+        <ul class="footer-feedback-list">
+          <li>Got a GitHub account?
+            <a href="https://github.com/{{ repo }}/issues/new?title={{ issue_title }}&body={{ issue_body }}"
+               aria-label="Suggest a change (opens a GitHub issue in a new tab)">
+              Suggest a change
+            </a>
+          </li>
+          <li>No GitHub account?
+            <a href="{{ "/contact/" | relative_url }}?context={{ context_param }}">
+              Send a suggestion
+            </a>
+          </li>
+        </ul>
+
         <p>
           Content licensed under
           <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener noreferrer">CC BY 4.0</a>

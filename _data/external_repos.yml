@@ -1,0 +1,14 @@
+# Registry of externally-mounted repos (git submodules) rendered as part of this site.
+# Each entry is keyed by a short identifier, set as `external_repo: <key>` via a
+# `_config.yml` defaults scope for the submodule's mount path.
+#
+# Schema:
+#   <key>:
+#     path: <mount path within this repo, e.g. governance/library>
+#     repo: <owner/repo the submodule tracks, and where "Suggest a change" issues are filed>
+#     ancestors:
+#       - title: <breadcrumb label>
+#         url: <breadcrumb url>
+#       - ...
+#
+# No entries yet — the governance repo entry is added when its submodule is mounted.
