@@ -6,6 +6,9 @@
 #   <key>:
 #     path: <mount path within this repo, e.g. governance/library>
 #     repo: <owner/repo the submodule tracks, and where "Suggest a change" issues are filed>
+#     issue_template: <optional; a template filename that exists in that repo's own
+#                       .github/ISSUE_TEMPLATE/. Omit unless you're sure it'll stay in
+#                       sync with that repo's own template maintenance.>
 #     ancestors:
 #       - title: <breadcrumb label>
 #         url: <breadcrumb url>

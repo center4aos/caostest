@@ -8,6 +8,7 @@ baseurl: "/caostest"
 url: "https://caos.org"
 repo: center4aos/caostest
 github_username: center4aos
+issue_template: page-issue.md
 
 theme: minima
 

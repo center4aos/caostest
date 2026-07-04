@@ -32,18 +32,31 @@
         </ul>
 
         {% assign ext = site.data.external_repos[page.external_repo] %}
-        {% assign repo = ext.repo | default: site.repo %}
+        {% if ext %}
+          {% assign repo = ext.repo %}
+          {% assign issue_template = ext.issue_template %}
+        {% else %}
+          {% assign repo = site.repo %}
+          {% assign issue_template = site.issue_template %}
+        {% endif %}
         {% assign mount_path = ext.path | default: "" %}
         {% assign relative_path = page.path | remove_first: mount_path | remove_first: "/" %}
         {% assign issue_title = "Issue: " | append: page.title | url_encode %}
         {% assign page_url = site.url | append: page.url %}
-        {% assign issue_body = "**Page:** [" | append: page.title | append: "](" | append: page_url | append: ")\n**File:** `" | append: relative_path | append: "`\n\n[Describe your issue here]" | url_encode %}
+        {% capture issue_body_raw %}<!-- Describe your issue or suggestion above this line. Please leave the "Related page" section below intact. -->
+
+
+
+---
+**Related page:** [{{ page.title }}]({{ page_url }})
+**File:** `{{ relative_path }}`{% endcapture %}
+        {% assign issue_body = issue_body_raw | url_encode %}
         {% assign context_param = page.title | append: " -- " | append: page_url | url_encode %}
 
         <p class="footer-feedback-heading"><strong>Suggest a Change</strong></p>
         <ul class="footer-feedback-list">
           <li>Got a GitHub account?
-            <a href="https://github.com/{{ repo }}/issues/new?title={{ issue_title }}&body={{ issue_body }}"
+            <a href="https://github.com/{{ repo }}/issues/new?{% if issue_template %}template={{ issue_template }}&{% endif %}title={{ issue_title }}&body={{ issue_body }}"
                aria-label="Suggest a change (opens a GitHub issue in a new tab)">
               Suggest a change
             </a>
