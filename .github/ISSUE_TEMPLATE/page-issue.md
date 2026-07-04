@@ -6,11 +6,10 @@ labels: page-feedback
 assignees: ''
 ---
 
-<!-- Describe your issue or suggestion above this line. If you know the specific
-     page this relates to, add it in the "Related page" section below rather
-     than deleting it. -->
-
+Please Describe your issue or suggestion below:
 
 
 ---
+<!-- Do not delete or modify this section!-->
+
 **Related page:**

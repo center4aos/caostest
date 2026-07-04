@@ -43,11 +43,12 @@
         {% assign relative_path = page.path | remove_first: mount_path | remove_first: "/" %}
         {% assign issue_title = "Issue: " | append: page.title | url_encode %}
         {% assign page_url = site.url | append: page.url %}
-        {% capture issue_body_raw %}<!-- Describe your issue or suggestion above this line. Please leave the "Related page" section below intact. -->
-
+        {% capture issue_body_raw %}Please Describe your issue or suggestion below:
 
 
 ---
+<!-- Do not delete or modify this section!-->
+
 **Related page:** [{{ page.title }}]({{ page_url }})
 **File:** `{{ relative_path }}`{% endcapture %}
         {% assign issue_body = issue_body_raw | url_encode %}
