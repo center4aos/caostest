@@ -1,28 +1,6 @@
-<footer class="site-footer" role="contentinfo">
+<footer class="site-footer" role="contentinfo" aria-label="Site footer">
   <div class="wrapper">
     <div class="footer-col-wrapper">
-
-      <div class="footer-col">
-        <h2 class="footer-heading">{{ site.title | escape }}</h2>
-        <ul class="contact-list">
-          {% if site.email %}
-            <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
-          {% endif %}
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <p><strong>Connect</strong></p>
-        <ul class="social-media-list">
-          {% if site.github_username %}
-            <li>
-              <a href="https://github.com/{{ site.github_username | escape }}" rel="noopener noreferrer" aria-label="CAOS on GitHub">
-                GitHub
-              </a>
-            </li>
-          {% endif %}
-        </ul>
-      </div>
 
       <div class="footer-col">
         <ul>
@@ -30,6 +8,46 @@
           <li><a href="{{ "/contact" | relative_url }}">Contact</a></li>
           <li><a href="{{ "/support" | relative_url }}">Donate</a></li>
         </ul>
+
+        {% assign ext = site.data.external_repos[page.external_repo] %}
+        {% if ext %}
+          {% assign repo = ext.repo %}
+          {% assign issue_template = ext.issue_template %}
+        {% else %}
+          {% assign repo = site.repo %}
+          {% assign issue_template = site.issue_template %}
+        {% endif %}
+        {% assign mount_path = ext.path | default: "" %}
+        {% assign relative_path = page.path | remove_first: mount_path | remove_first: "/" %}
+        {% assign issue_title = "Issue: " | append: page.title | url_encode %}
+        {% assign page_url = site.url | append: page.url %}
+        {% capture issue_body_raw %}Please Describe your issue or suggestion below:
+
+
+---
+<!-- Do not delete or modify this section!-->
+
+**Related page:** [{{ page.title }}]({{ page_url }})
+**File:** `{{ relative_path }}`{% endcapture %}
+        {% assign issue_body = issue_body_raw | url_encode %}
+        {% assign context_param = page.title | append: " -- " | append: page_url | url_encode %}
+
+        <p class="footer-feedback-heading"><strong>Do you have feedback?</strong></p>
+        <ul class="footer-feedback-list">
+          <li>Got a GitHub account?
+            <a href="https://github.com/{{ repo }}/issues/new?{% if issue_template %}template={{ issue_template }}&{% endif %}title={{ issue_title }}&body={{ issue_body }}"
+               aria-label="Suggest a change (opens a GitHub issue in a new tab)">
+              Suggest a change
+            </a>
+          </li>
+          <li>No GitHub account?
+            <a href="{{ "/contact/" | relative_url }}?context={{ context_param }}"
+               aria-label="Send a suggestion (use our contact form)">
+              Send a suggestion
+            </a>
+          </li>
+        </ul>
+
         <p>
           Content licensed under
           <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener noreferrer">CC BY 4.0</a>

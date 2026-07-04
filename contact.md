@@ -39,6 +39,7 @@ We welcome your questions, ideas, and contributions. Fill out the form below or 
       <option value="media">Media inquiry</option>
       <option value="advisory-board">Advisory Board</option>
       <option value="donation">Donation</option>
+      <option value="website-feedback">Website feedback or issue report</option>
     </select>
     <span data-fs-error="topic"></span>
   </div>
@@ -57,6 +58,8 @@ We welcome your questions, ideas, and contributions. Fill out the form below or 
     <span data-fs-error="message"></span>
   </div>
 
+  <input type="hidden" id="contact-page-context" name="page_context" data-fs-field>
+
   <div>
     <button type="submit" data-fs-submit-btn>Send message</button>
   </div>
@@ -73,6 +76,15 @@ We welcome your questions, ideas, and contributions. Fill out the form below or 
     new MutationObserver(function () {
       if (success.offsetParent !== null) success.focus();
     }).observe(success, { attributes: true, attributeFilter: ['style', 'class'] });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var params = new URLSearchParams(window.location.search);
+    var context = params.get('context');
+    if (context) {
+      document.getElementById('contact-page-context').value = context;
+      document.getElementById('contact-topic').value = 'website-feedback';
+    }
   });
 </script>
 <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
