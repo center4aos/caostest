@@ -29,9 +29,7 @@ CAOS is a California 501(c)(3) nonprofit — the first organization to make the 
 | `about.md` | About CAOS, mission, board bios |
 | `projects.md` | Active partnerships (CREATE, Teach Access, NV Access) |
 | `resources.md` | Curated accessibility resources (content placeholder) |
-| `governance.md` | Bylaws links, board meeting info |
-| `bylaws.md` | Full corporate bylaws |
-| `conflict-of-interest.md` | Conflict of interest policy |
+| `governance.md` | Policy Library link, board meeting info |
 | `support.md` | Donation information |
 | `contact.md` | Contact form and newsletter signup |
 | `calendar.md` | Upcoming events |

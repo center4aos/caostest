@@ -19,8 +19,7 @@ We believe accountability to our community requires openness. Our governing docu
 
 ### Governing Documents
 
-- [Bylaws]({{ "/bylaws/" | relative_url }})
-- [Conflict of Interest Policy]({{ "/conflict-of-interest/" | relative_url }})
+- [Policy Library]({{ "/governance/library/" | relative_url }}) — bylaws, conflict of interest policy, and other governing documents
 
 ---
 

@@ -23,9 +23,7 @@
 - ✅ Blog
 - ✅ Calendar
 - ✅ Accessibility Statement
-- 🔲 Policy Library (child of Governance; served from the governance repo submodule — see Governance Repository Integration). Retires the standalone Bylaws and Conflict of Interest Policy pages below, which move into the Policy Library alongside other policies.
-- ~~Bylaws (child of Governance)~~ — retiring; content moves into the Policy Library
-- ~~Conflict of Interest Policy (child of Governance)~~ — retiring; content moves into the Policy Library
+- ✅ Policy Library (child of Governance; served from the governance repo submodule — see Governance Repository Integration). Retires the standalone Bylaws and Conflict of Interest Policy pages, which have moved into the Policy Library alongside other policies.
 
 ### General Wire Frame — applies to all pages
 
@@ -68,10 +66,9 @@
 
 - ✅ 501(c)(3) statement
 - ✅ Transparency statement
-- ~~Bylaws link~~ / ~~Conflict of Interest Policy link~~ — retiring in favor of a single Policy Library link (below); the standalone `bylaws.md` and `conflict-of-interest.md` pages are being removed
+- ✅ Single link to the Policy Library, replacing the old standalone Bylaws and Conflict of Interest Policy links, pointing into the governance repository submodule (see Governance Repository Integration). The standalone `bylaws.md` and `conflict-of-interest.md` pages have been removed.
 - 🔲 Form 990 link
 - 🔲 Board meeting schedule
-- 🔲 Single link to the Policy Library, replacing the two links above, pointing into the governance repository submodule (see Governance Repository Integration)
 
 ### Contact
 
@@ -444,7 +441,7 @@ giving Home → Governance → [Policy Library, current page]. No special-casing
 
 ### Retired: `bylaws.md` / `conflict-of-interest.md`
 
-Per the Site Map and Governance page-structure updates above, these two pages are being removed from the main site, replaced by a single link from `governance.md` into the Policy Library (which will contain both documents, plus others, inside the governance repo). They were also the only two pages using the old `parent:`/`parent_url:` fields, so `breadcrumbs.html` needs no backward-compatibility branch for that schema — the ancestors-array model is the only mechanism, from day one.
+Per the Site Map and Governance page-structure updates above, these two pages have been removed from the main site, replaced by a single link from `governance.md` into the Policy Library (which contains both documents, plus others, inside the governance repo). They were also the only two pages using the old `parent:`/`parent_url:` fields, so `breadcrumbs.html` needs no backward-compatibility branch for that schema — the ancestors-array model is the only mechanism, from day one.
 
 ---
 
