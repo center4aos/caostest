@@ -14,4 +14,11 @@
 #         url: <breadcrumb url>
 #       - ...
 #
-# No entries yet — the governance repo entry is added when its submodule is mounted.
+governance:
+  path: governance/library
+  repo: center4aos/governance
+  ancestors:
+    - title: Governance
+      url: /governance/
+    - title: Policy Library
+      url: /governance/library/

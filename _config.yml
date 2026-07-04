@@ -46,6 +46,11 @@ defaults:
       ancestors:
         - title: Calendar
           url: /calendar/
+  - scope:
+      path: "governance/library"
+    values:
+      layout: page
+      external_repo: governance
 
 plugins:
   - jekyll-feed
