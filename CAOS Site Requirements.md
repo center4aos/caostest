@@ -54,7 +54,7 @@
 - ✅ Mission statement
 - ✅ Short paragraph on CAOS origin
 - ✅ Board member bios with headings
-- 🔲 Board member photos
+- 🔲 Board member photos and image descriptions (see "Leadership Bios & Photos" below)
 - 🔲 Advisory board description and member list
 
 ### Resources
@@ -513,6 +513,62 @@ Because the link no longer names a specific template file, no template filename 
 **Verified:** `page.path` for `_posts`/`_events` collection items does resolve to a meaningful relative source path in Liquid — confirmed by loading this repo's actual site with `bundle exec ruby` (Jekyll 3.9.3, the version pinned via the `github-pages` gem) and inspecting what `to_liquid` exposes as `"path"`: `_posts/2026-06-25-new-caos-web-site.md` for the existing blog post, `_events/2026-07-15-board-meeting.md` for the existing board-meeting event. (Note: the raw Ruby `Document#path` accessor returns an *absolute* filesystem path — a red herring if you check it that way — but `{{ page.path }}` as seen by Liquid templates is always the relative path, matching what ordinary pages like `governance.md` already show.) No changes needed to reach this conclusion; the `remove_first: mount_path` stripping described above is a no-op for posts/events, which is correct since they have no `external_repo`/mount prefix to strip in the first place.
 
 No open questions remain for this section — placement, both link labels, and the two-path structure are all decided above.
+
+---
+
+## Leadership Bios & Photos
+
+### Purpose
+
+Officers and board members (About CAOS page) each need a headshot, an image description (alt text), and a short bio, submitted individually and updated independently of one another without disturbing anyone else's entry. Ordering must be controllable (not just alphabetical-by-name), and a mismatched or incomplete submission should fail loudly with a specific, interpretable error rather than silently rendering wrong or incomplete.
+
+### Decisions
+
+- **Two parallel folders, matched by filename stem:** `_leadership/<stem>.md` holds the data (`name:`, `role:`, `bio:`, `desc:` frontmatter fields, no body content used); `assets/images/leadership/<stem>.jpg` holds the headshot. Folder names chosen to match existing convention (`assets/css/` already exists for static assets; `_leadership` as a Jekyll collection matches the `_data`/`_includes`/`_layouts` underscore convention). Originally considered co-locating both files in one folder for editing convenience, but split into two to avoid relying on unverified Jekyll behavior — see "To verify during implementation" below.
+- **`_leadership` is a Jekyll collection with `output: false`,** not a generated `_data/*.yml` file. Every field here is already explicit frontmatter with no nesting or H1-extraction needed (unlike the governance tree-walk), so Jekyll's own frontmatter parser exposes `site.leadership` directly — no custom generation script required for this part.
+- **Ordering:** by `path` (source file path), which reflects filename order directly. Default alphanumeric sort by stem; when a specific non-alphabetical order is wanted (e.g., President listed first regardless of surname), prepend a number to the stem (e.g. `01-miele.md` / `01-miele.jpg`, `02-summers.md` / `02-summers.jpg`). The numeric prefix is never displayed — `name:` is always the display source — it only affects sort order and file pairing (both halves of a pair must share the exact same stem, prefix included).
+- **Validation is a separate, focused script**, not folded into data generation: `script/validate-leadership.rb` walks both folders, and for every stem occurring in *either* folder, confirms the other half exists (catches an orphaned `.md` with no photo, and an orphaned photo with no data file, symmetrically). For every `.md`, confirms `name`, `role`, `bio`, and `desc` are all present and non-blank. Exits non-zero with a specific message naming the exact file and the exact problem (missing pair, or which field is blank/absent) on any failure; exits 0 with a short summary count on success. Deliberately only `.jpg` is recognized as the image extension — a stray `.jpeg`/`.png`/`.webp` file won't be matched to its `.md` counterpart and will correctly surface as an orphaned-image error, catching format mistakes for free without extra special-casing.
+- **Run manually for now, not wired into CI.** This is a slowly-changing list; automating validation into a GitHub Action (mirroring issue #10's pattern) is easy to add later if it ever becomes worth it, but isn't justified yet.
+- **Scope: Officers and Board Members only.** The Advisory Board section has no confirmed members yet ("Advisory board members to be announced" — see About CAOS page structure); this mechanism can extend to cover it once members exist, rather than speccing for placeholder content.
+- **Markdown links are supported in `bio` and `name`, not `role` or `desc`:**
+  - `bio` is rendered via `{{ bio | markdownify }}`. Kramdown wraps this in a `<p>...</p>`, which is fine since the bio sits next to the photo as ordinary flowing text, not inside a heading.
+  - `name` is rendered via `{{ name | markdownify | remove_first: "<p>" | remove_first: "</p>" }}` — the same markdownify call, but with the block-level `<p>` wrapper stripped (via two `remove_first` calls, pure Liquid, no plugin needed) since `name` is embedded inside a heading (`#### {{ name_html }}, {{ role }}`) where a nested block element would be invalid and would break the layout. This preserves any inline formatting/links inside, just not the outer paragraph wrapper.
+  - `role` stays plain text (job titles don't need links).
+  - `desc` is never markdownified — it's used as a raw `alt` attribute value, which can't contain markup at all.
+- **External links need no special handling.** All links contributors add in `bio`/`name` will be external (personal sites, professional profiles, etc.). The site-wide script in `_layouts/default.html` already finds every `<a href="http...">` whose hostname differs from the current page and adds `target="_blank"`, `rel="noopener noreferrer"`, and an auto `aria-label` — this runs after Jekyll's build-time HTML is already in the DOM, so it applies uniformly to these links with zero extra code.
+
+### Rendering
+
+`_includes/leadership-card.html`, called once per entry from `about.md`:
+
+```liquid
+{% assign leaders = site.leadership | sort: "path" %}
+{% for leader in leaders %}
+  {% include leadership-card.html leader=leader %}
+{% endfor %}
+```
+
+```liquid
+<!-- _includes/leadership-card.html -->
+{% assign name_html = include.leader.name | markdownify | remove_first: "<p>" | remove_first: "</p>" %}
+{% assign stem = include.leader.path | remove_first: "_leadership/" | remove_first: ".md" %}
+<div class="leadership-card">
+  <h4>{{ name_html }}, {{ include.leader.role }}</h4>
+  <div class="leadership-card-body">
+    <img src="{{ "/assets/images/leadership/" | append: stem | append: ".jpg" | relative_url }}"
+         alt="{{ include.leader.desc }}" class="leadership-photo">
+    {{ include.leader.bio | markdownify }}
+  </div>
+</div>
+```
+
+### CSS
+
+Nothing image-related exists yet in `accessibility.scss`. New rule needed: `.leadership-card-body` as a flex row (image + bio side by side, wrapping to stacked on narrow viewports); `.leadership-photo` with a fixed width/height and `object-fit: cover`, so source photos don't need pixel-perfect pre-cropping to render consistently.
+
+### To verify during implementation
+
+Whether Jekyll's collection mechanism would have correctly passed through non-frontmatter `.jpg` files placed in the *same* directory as the collection's `.md` files as ordinary static assets was never tested — the two-folder design above sidesteps the question entirely rather than relying on unverified behavior, consistent with this project's preference for testing platform behavior directly rather than assuming it. If a single co-located folder is ever wanted for editing convenience, that specific behavior would need direct verification first.
 
 ---
 
