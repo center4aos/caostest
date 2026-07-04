@@ -1,8 +1,10 @@
 {% unless page.url == "/" %}
+{% assign ext = site.data.external_repos[page.external_repo] %}
+{% assign ancestors = page.ancestors | default: ext.ancestors %}
 <nav class="breadcrumb" aria-label="Breadcrumb">
   <ol>
     <li><a href="{{ "/" | relative_url }}">Home</a></li>
-    {% for ancestor in page.ancestors %}
+    {% for ancestor in ancestors %}
       <li><a href="{{ ancestor.url | relative_url }}">{{ ancestor.title }}</a></li>
     {% endfor %}
     <li><span aria-current="page">{{ page.title }}</span></li>

@@ -1,0 +1,3 @@
+[submodule "governance/library"]
+	path = governance/library
+	url = https://github.com/center4aos/governance
