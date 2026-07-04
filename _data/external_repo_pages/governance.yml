@@ -47,6 +47,10 @@ tree:
     title: Document Retention Policy
     path: policies/document-retention-policy.md
     url: "/governance/library/policies/document-retention-policy.html"
+  - type: file
+    title: Automation Test — Safe to Delete
+    path: policies/zzz-automation-test.md
+    url: "/governance/library/policies/zzz-automation-test.html"
 flat:
   CODE_OF_CONDUCT.md: CODE OF CONDUCT
   CONTRIBUTING.md: CONTRIBUTING
@@ -59,3 +63,4 @@ flat:
   policies/bylaws.md: Bylaws
   policies/conflict-of-interest-policy.md: Conflict Of Interest Policy
   policies/document-retention-policy.md: Document Retention Policy
+  policies/zzz-automation-test.md: Automation Test — Safe to Delete
