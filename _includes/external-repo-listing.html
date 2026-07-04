@@ -1,0 +1,18 @@
+<!-- external-repo-listing.html — expects include.nodes (array) and include.level (heading level for directories found at this depth) -->
+{% assign files = include.nodes | where: "type", "file" %}
+{% assign dirs = include.nodes | where: "type", "directory" %}
+
+{% if files.size > 0 %}
+<ul>
+  {% for file in files %}
+    <li><a href="{{ file.url | relative_url }}">{{ file.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% for dir in dirs %}
+  {% assign heading_level = include.level | at_most: 6 %}
+  <h{{ heading_level }}>{{ dir.name }}</h{{ heading_level }}>
+  {% assign next_level = include.level | plus: 1 %}
+  {% include external-repo-listing.html nodes=dir.children level=next_level %}
+{% endfor %}

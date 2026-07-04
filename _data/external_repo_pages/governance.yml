@@ -1,0 +1,61 @@
+---
+tree:
+- type: file
+  title: CODE OF CONDUCT
+  path: CODE_OF_CONDUCT.md
+  url: "/governance/library/CODE_OF_CONDUCT.html"
+- type: file
+  title: CONTRIBUTING
+  path: CONTRIBUTING.md
+  url: "/governance/library/CONTRIBUTING.html"
+- type: file
+  title: GOVERNANCE
+  path: GOVERNANCE.md
+  url: "/governance/library/GOVERNANCE.html"
+- type: file
+  title: README
+  path: README.md
+  url: "/governance/library/README.html"
+- type: directory
+  name: Policies
+  children:
+  - type: file
+    title: AI Policy
+    path: policies/AI-policy.md
+    url: "/governance/library/policies/AI-policy.html"
+  - type: file
+    title: Accessibility Policy
+    path: policies/accessibility-policy.md
+    url: "/governance/library/policies/accessibility-policy.html"
+  - type: file
+    title: Accessibility Statement
+    path: policies/accessibility-statement.md
+    url: "/governance/library/policies/accessibility-statement.html"
+  - type: file
+    title: Ai Tooling Memo
+    path: policies/ai-tooling-memo.md
+    url: "/governance/library/policies/ai-tooling-memo.html"
+  - type: file
+    title: Bylaws
+    path: policies/bylaws.md
+    url: "/governance/library/policies/bylaws.html"
+  - type: file
+    title: Conflict Of Interest Policy
+    path: policies/conflict-of-interest-policy.md
+    url: "/governance/library/policies/conflict-of-interest-policy.html"
+  - type: file
+    title: Document Retention Policy
+    path: policies/document-retention-policy.md
+    url: "/governance/library/policies/document-retention-policy.html"
+flat:
+  CODE_OF_CONDUCT.md: CODE OF CONDUCT
+  CONTRIBUTING.md: CONTRIBUTING
+  GOVERNANCE.md: GOVERNANCE
+  README.md: README
+  policies/AI-policy.md: AI Policy
+  policies/accessibility-policy.md: Accessibility Policy
+  policies/accessibility-statement.md: Accessibility Statement
+  policies/ai-tooling-memo.md: Ai Tooling Memo
+  policies/bylaws.md: Bylaws
+  policies/conflict-of-interest-policy.md: Conflict Of Interest Policy
+  policies/document-retention-policy.md: Document Retention Policy
