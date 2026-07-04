@@ -1,0 +1,38 @@
+name: Update external repo submodule
+
+on:
+  repository_dispatch:
+    types: [submodule-updated]
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Bump submodule and regenerate page data
+        run: |
+          git submodule update --remote "${{ github.event.client_payload.path }}"
+          bundle exec ruby script/sync-external-repo-pages.rb \
+            --key "${{ github.event.client_payload.key }}" \
+            --path "${{ github.event.client_payload.path }}"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${{ github.event.client_payload.path }}" \
+                  "_data/external_repo_pages/${{ github.event.client_payload.key }}.yml" \
+                  "_external_repo_pages/${{ github.event.client_payload.key }}.md"
+          git commit -m "Update ${{ github.event.client_payload.path }} submodule" || echo "No changes"
+          git push
