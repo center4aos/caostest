@@ -1,13 +1,19 @@
 {% unless page.url == "/" %}
 {% assign ext = site.data.external_repos[page.external_repo] %}
 {% assign ancestors = page.ancestors | default: ext.ancestors %}
+{% assign resolved_title = page.title %}
+{% if page.external_repo and resolved_title == nil %}
+  {% assign mount_path = ext.path | default: "" %}
+  {% assign relative_path = page.path | remove_first: mount_path | remove_first: "/" %}
+  {% assign resolved_title = site.data.external_repo_pages[page.external_repo].flat[relative_path] | default: site.title %}
+{% endif %}
 <nav class="breadcrumb" aria-label="Breadcrumb">
   <ol>
     <li><a href="{{ "/" | relative_url }}">Home</a></li>
     {% for ancestor in ancestors %}
       <li><a href="{{ ancestor.url | relative_url }}">{{ ancestor.title }}</a></li>
     {% endfor %}
-    <li><span aria-current="page">{{ page.title }}</span></li>
+    <li><span aria-current="page">{{ resolved_title }}</span></li>
   </ol>
 </nav>
 {% endunless %}

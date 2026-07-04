@@ -4,7 +4,21 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% seo %}
+    {% assign resolved_title = page.title %}
+    {% if page.external_repo and resolved_title == nil %}
+      {% assign ext = site.data.external_repos[page.external_repo] %}
+      {% assign mount_path = ext.path | default: "" %}
+      {% assign relative_path = page.path | remove_first: mount_path | remove_first: "/" %}
+      {% assign resolved_title = site.data.external_repo_pages[page.external_repo].flat[relative_path] | default: site.title %}
+    {% endif %}
+    {% if page.external_repo and page.title == nil %}
+      <title>{{ resolved_title | escape }} | {{ site.title | escape }}</title>
+      <meta name="description" content="{{ site.description | escape }}">
+      <meta property="og:title" content="{{ resolved_title | escape }}">
+      <meta property="og:description" content="{{ site.description | escape }}">
+    {% else %}
+      {% seo %}
+    {% endif %}
     <link rel="stylesheet" href="{{ "/assets/css/accessibility.css" | relative_url }}">
     <link rel="alternate" type="application/atom+xml" title="{{ site.title | escape }}" href="{{ "/atom.xml" | relative_url }}">
   </head>
@@ -17,7 +31,7 @@
 
       <article class="post" aria-labelledby="page-title">
         <header class="post-header">
-          <h1 class="post-title" id="page-title">{{ page.title | escape }}</h1>
+          <h1 class="post-title" id="page-title">{{ resolved_title | escape }}</h1>
           {% if page.description %}
             <p class="page-description">{{ page.description }}</p>
           {% endif %}

@@ -336,6 +336,44 @@ No open questions remain for this section — H1 extraction (Kramdown-based, fir
 
 ---
 
+## Directory URL Redirects for External Repo Mounts
+
+### Purpose
+
+The listing page renders an external repo's whole tree on a single page at the mount root (e.g. `/governance/library/`) — by design, there are no separate pages for its subdirectories (see "Decision (superseding the earlier nested-list design)" above). That means a URL to a subdirectory itself — e.g. `/governance/library/committees/`, guessed, bookmarked from an old link, or typed by hand — 404s, even though `committees` is a real folder in the mounted repo. A URL to a path that doesn't exist at all (a typo, or a document that was actually removed) should still 404 normally. The two cases need to be told apart, not treated the same way.
+
+### Decision: `jekyll-redirect-from`, driven by the same tree walk
+
+**Verified installed:** `jekyll-redirect-from` (0.16.0) ships as part of the `github-pages` gem already in this repo's `Gemfile` — the same free-lunch mechanism that already gives per-document titles via `jekyll-titles-from-headings` (see "Title fallback for individual documents" above) without any custom code.
+
+Giving a page a `redirect_from:` frontmatter array causes the plugin to generate a small standalone redirect page (meta-refresh + canonical link + JS fallback) at each listed URL, pointing back to the page carrying the list — generated at build time only, never committed as separate files. Applied here: the listing page (`_external_repo_pages/governance.md`) carries a `redirect_from:` entry for every directory path in the mount's tree, at every depth:
+
+```yaml
+---
+permalink: /governance/library/
+ancestors:
+  - title: Governance
+    url: /governance/
+redirect_from:
+  - /governance/library/committees/
+  - /governance/library/policies/
+  - /governance/library/meeting-notes/
+  # ...one entry per directory node in the tree, any depth
+---
+```
+
+This gives exactly the two behaviors wanted: a real directory redirects (a page was generated for it), and a genuinely missing path was never generated, so it falls through to GitHub Pages' ordinary 404 — no manifest-matching logic, no client-side detection, nothing to get wrong. It also beats a hand-rolled 404.html-based redirect (considered and rejected — briefly implemented and reverted on PR #15) on accessibility grounds: no error-page flash before a JS redirect fires, and it degrades gracefully without JS via the meta-refresh.
+
+### Generation mechanics
+
+`script/sync-external-repo-pages.rb` (see "External Repo Page Index & Titles" above) already walks the mount's tree to build `_data/external_repo_pages/<key>.yml`. The same walk supplies the list of directory paths for `redirect_from`. Because the listing page is otherwise hand-authored (its own `ancestors:`, `permalink:`), the script must surgically merge/replace just the `redirect_from:` key in that page's frontmatter rather than regenerating the whole file — parse the frontmatter, update that one key, rewrite, leaving everything else untouched.
+
+### Scope
+
+Applies uniformly to every external-repo mount, keyed the same way as the rest of the registry — no template or per-mount logic beyond the one `redirect_from:` list per mount's listing page.
+
+---
+
 ## Breadcrumb Architecture
 
 ### Decision

@@ -32,6 +32,8 @@ collections:
     output: true
     permalink: /events/:name/
     sort_by: date
+  external_repo_pages:
+    output: true
 
 defaults:
   - scope:
@@ -56,6 +58,8 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
+  - jekyll-titles-from-headings
+  - jekyll-redirect-from
 
 # Accessibility: ensure feed and sitemap are generated
 feed:
