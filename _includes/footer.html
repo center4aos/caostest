@@ -1,28 +1,6 @@
-<footer class="site-footer" role="contentinfo">
+<footer class="site-footer" role="contentinfo" aria-label="Site footer">
   <div class="wrapper">
     <div class="footer-col-wrapper">
-
-      <div class="footer-col">
-        <h2 class="footer-heading">{{ site.title | escape }}</h2>
-        <ul class="contact-list">
-          {% if site.email %}
-            <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
-          {% endif %}
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <p><strong>Connect</strong></p>
-        <ul class="social-media-list">
-          {% if site.github_username %}
-            <li>
-              <a href="https://github.com/{{ site.github_username | escape }}" rel="noopener noreferrer" aria-label="CAOS on GitHub">
-                GitHub
-              </a>
-            </li>
-          {% endif %}
-        </ul>
-      </div>
 
       <div class="footer-col">
         <ul>
@@ -54,7 +32,7 @@
         {% assign issue_body = issue_body_raw | url_encode %}
         {% assign context_param = page.title | append: " -- " | append: page_url | url_encode %}
 
-        <p class="footer-feedback-heading"><strong>Suggest a Change</strong></p>
+        <p class="footer-feedback-heading"><strong>Do you have feedback?</strong></p>
         <ul class="footer-feedback-list">
           <li>Got a GitHub account?
             <a href="https://github.com/{{ repo }}/issues/new?{% if issue_template %}template={{ issue_template }}&{% endif %}title={{ issue_title }}&body={{ issue_body }}"
@@ -63,7 +41,8 @@
             </a>
           </li>
           <li>No GitHub account?
-            <a href="{{ "/contact/" | relative_url }}?context={{ context_param }}">
+            <a href="{{ "/contact/" | relative_url }}?context={{ context_param }}"
+               aria-label="Send a suggestion (use our contact form)">
               Send a suggestion
             </a>
           </li>
