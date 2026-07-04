@@ -30,6 +30,20 @@ collections:
     permalink: /events/:name/
     sort_by: date
 
+defaults:
+  - scope:
+      type: posts
+    values:
+      ancestors:
+        - title: Blog
+          url: /blog/
+  - scope:
+      type: events
+    values:
+      ancestors:
+        - title: Calendar
+          url: /calendar/
+
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
