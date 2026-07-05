@@ -524,10 +524,10 @@ Officers and board members (About CAOS page) each need a headshot, an image desc
 
 ### Decisions
 
-- **Two parallel folders, matched by filename stem:** `_leadership/<stem>.md` holds the data (`name:`, `role:`, `bio:`, `desc:` frontmatter fields, no body content used); `assets/images/leadership/<stem>.jpg` holds the headshot. Folder names chosen to match existing convention (`assets/css/` already exists for static assets; `_leadership` as a Jekyll collection matches the `_data`/`_includes`/`_layouts` underscore convention). Originally considered co-locating both files in one folder for editing convenience, but split into two to avoid relying on unverified Jekyll behavior — see "To verify during implementation" below.
+- **One folder, matched by filename stem:** `_leadership/<stem>.md` (data: `name:`, `role:`, `bio:`, `desc:` frontmatter fields, no body content used) and `_leadership/<stem>.jpg` (headshot) live together, co-located as originally wanted for editing convenience. **Verified working** ([caostest#20](https://github.com/center4aos/caostest/issues/20)): a real `bundle exec jekyll build` test confirmed Jekyll's collection mechanism copies a co-located non-frontmatter `.jpg` through as an ordinary static file — output path mirrors the collection directory with the leading underscore stripped, e.g. `_leadership/miele.jpg` → `/leadership/miele.jpg` — while the paired `.md` correctly produces zero output of its own (pure collection document, suppressed by `output: false`). An earlier draft of this design split data and photos into two separate folders as a hedge against this being unverified; that hedge is no longer needed.
 - **`_leadership` is a Jekyll collection with `output: false`,** not a generated `_data/*.yml` file. Every field here is already explicit frontmatter with no nesting or H1-extraction needed (unlike the governance tree-walk), so Jekyll's own frontmatter parser exposes `site.leadership` directly — no custom generation script required for this part.
 - **Ordering:** by `path` (source file path), which reflects filename order directly. Default alphanumeric sort by stem; when a specific non-alphabetical order is wanted (e.g., President listed first regardless of surname), prepend a number to the stem (e.g. `01-miele.md` / `01-miele.jpg`, `02-summers.md` / `02-summers.jpg`). The numeric prefix is never displayed — `name:` is always the display source — it only affects sort order and file pairing (both halves of a pair must share the exact same stem, prefix included).
-- **Validation is a separate, focused script**, not folded into data generation: `script/validate-leadership.rb` walks both folders, and for every stem occurring in *either* folder, confirms the other half exists (catches an orphaned `.md` with no photo, and an orphaned photo with no data file, symmetrically). For every `.md`, confirms `name`, `role`, `bio`, and `desc` are all present and non-blank. Exits non-zero with a specific message naming the exact file and the exact problem (missing pair, or which field is blank/absent) on any failure; exits 0 with a short summary count on success. Deliberately only `.jpg` is recognized as the image extension — a stray `.jpeg`/`.png`/`.webp` file won't be matched to its `.md` counterpart and will correctly surface as an orphaned-image error, catching format mistakes for free without extra special-casing.
+- **Validation is a separate, focused script**, not folded into data generation: `script/validate-leadership.rb` walks `_leadership/`, and for every stem occurring in the folder, confirms both a `.md` and a `.jpg` exist (catches an orphaned `.md` with no photo, and an orphaned photo with no data file, symmetrically). For every `.md`, confirms `name`, `role`, `bio`, and `desc` are all present and non-blank. Exits non-zero with a specific message naming the exact file and the exact problem (missing pair, or which field is blank/absent) on any failure; exits 0 with a short summary count on success. Deliberately only `.jpg` is recognized as the image extension — a stray `.jpeg`/`.png`/`.webp` file won't be matched to its `.md` counterpart and will correctly surface as an orphaned-image error, catching format mistakes for free without extra special-casing.
 - **Run manually for now, not wired into CI.** This is a slowly-changing list; automating validation into a GitHub Action (mirroring issue #10's pattern) is easy to add later if it ever becomes worth it, but isn't justified yet.
 - **Scope: Officers and Board Members only.** The Advisory Board section has no confirmed members yet ("Advisory board members to be announced" — see About CAOS page structure); this mechanism can extend to cover it once members exist, rather than speccing for placeholder content.
 - **Markdown links are supported in `bio` and `name`, not `role` or `desc`:**
@@ -555,20 +555,20 @@ Officers and board members (About CAOS page) each need a headshot, an image desc
 <div class="leadership-card">
   <h4>{{ name_html }}, {{ include.leader.role }}</h4>
   <div class="leadership-card-body">
-    <img src="{{ "/assets/images/leadership/" | append: stem | append: ".jpg" | relative_url }}"
+    <img src="{{ "/leadership/" | append: stem | append: ".jpg" | relative_url }}"
          alt="{{ include.leader.desc }}" class="leadership-photo">
     {{ include.leader.bio | markdownify }}
   </div>
 </div>
 ```
 
+Image path mirrors the collection directory with its leading underscore stripped (`_leadership/miele.jpg` → `/leadership/miele.jpg`), per the verified behavior above — not `/assets/images/leadership/`, since the photo lives in `_leadership/` itself now.
+
 ### CSS
 
 Nothing image-related exists yet in `accessibility.scss`. New rule needed: `.leadership-card-body` as a flex row (image + bio side by side, wrapping to stacked on narrow viewports); `.leadership-photo` with a fixed width/height and `object-fit: cover`, so source photos don't need pixel-perfect pre-cropping to render consistently.
 
-### To verify during implementation
-
-Whether Jekyll's collection mechanism would have correctly passed through non-frontmatter `.jpg` files placed in the *same* directory as the collection's `.md` files as ordinary static assets was never tested — the two-folder design above sidesteps the question entirely rather than relying on unverified behavior, consistent with this project's preference for testing platform behavior directly rather than assuming it. If a single co-located folder is ever wanted for editing convenience, that specific behavior would need direct verification first.
+No open questions remain for this section — the one-folder design is verified working end to end (see [caostest#20](https://github.com/center4aos/caostest/issues/20)).
 
 ---
 
