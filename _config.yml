@@ -71,5 +71,7 @@ exclude:
   - Gemfile.lock
   - "CAOS Site Requirements.md"
   - README.md
+  - LICENSE
+  - LICENSE-CONTENT
   - node_modules
   - vendor

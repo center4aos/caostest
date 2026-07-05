@@ -110,3 +110,14 @@ Never hardcode `/caostest/...` paths or bare root-relative `/path/` links — bo
 - Add board meeting schedule to governance page
 - ~~Enable HTTPS enforcement on GitHub Pages settings~~ ✅ done
 - ~~Delete legacy `docs/` folder from repo~~ ✅ done
+
+---
+
+## License
+
+This repository is dual-licensed:
+
+- **Code** — Jekyll templates/layouts/includes, stylesheets, scripts, and CI/CD configuration — is licensed under the [MIT License](LICENSE).
+- **Content** — written site content, blog posts, and images — is licensed under [CC BY 4.0](LICENSE-CONTENT), unless otherwise noted.
+
+Content mounted from other repositories (e.g. the governance repo's Policy Library) is licensed separately by that repository.
