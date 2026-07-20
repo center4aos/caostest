@@ -32,8 +32,8 @@ title:'PayPal - The safer, easier way to pay online!',
 </div>
 
 #### Venmo
-<!-- TODO: Add Venmo handle -->
-*Handle coming soon.*
+
+[@CAOS-org](https://www.venmo.com/u/CAOS-org)
 
 #### Benevity
 If your employer matches donations through Benevity, you can direct your gift to CAOS.
