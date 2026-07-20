@@ -34,23 +34,10 @@ CAOS was founded by Dr. Joshua A. Miele, whose work at the intersection of blind
 
 ### Officers and Board Members
 
-#### Josh Miele — President
-
-Josh Miele is a blind scientist and accessibility researcher and the founder of CAOS.
-
-#### Ed Summers
-
-Ed Summers brings experience from GitHub and a long history of work at the intersection of technology and open culture.
-
-#### Jennifer Mankoff
-
-Jennifer Mankoff is a professor at the University of Washington with deep expertise in accessibility and human-computer interaction.
-
-#### Liz Henry
-
-Liz Henry (GOAT) brings extensive experience in open-source communities and disability advocacy.
-
-<!-- TODO: Add full bios, photos, and any additional board members -->
+{% assign leaders = site.leadership | sort: "path" %}
+{% for leader in leaders %}
+  {% include leadership-card.html leader=leader %}
+{% endfor %}
 
 ---
 

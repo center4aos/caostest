@@ -34,6 +34,8 @@ collections:
     sort_by: date
   external_repo_pages:
     output: true
+  leadership:
+    output: false
 
 defaults:
   - scope:
