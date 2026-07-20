@@ -1,0 +1,20 @@
+<!-- leadership-card.html -- expects include.leader (a site.leadership item) -->
+{% assign name_html = include.leader.name | markdownify | remove_first: "<p>" | remove_first: "</p>" | strip %}
+{% assign stem = include.leader.path | remove_first: "_leadership/" | remove_first: ".md" %}
+{% assign leadership_collection = site.collections | where: "label", "leadership" | first %}
+{% assign photo_file = leadership_collection.files | where: "basename", stem | first %}
+{% if photo_file %}
+  {% assign photo_stem = stem %}
+  {% assign photo_alt = include.leader.desc %}
+{% else %}
+  {% assign photo_stem = "fallback" %}
+  {% assign photo_alt = "CAOS generic image" %}
+{% endif %}
+<div class="leadership-card">
+  <h4>{{ name_html }}, {{ include.leader.role }}</h4>
+  <div class="leadership-card-body">
+    <img src="{{ "/leadership/" | append: photo_stem | append: ".jpg" | relative_url }}"
+         alt="{{ photo_alt }}" class="leadership-photo">
+    {{ include.leader.bio | markdownify }}
+  </div>
+</div>
