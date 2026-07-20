@@ -35,10 +35,6 @@ title:'PayPal - The safer, easier way to pay online!',
 <!-- TODO: Add Venmo handle -->
 *Handle coming soon.*
 
-#### Zelle
-<!-- TODO: Add Zelle details -->
-*Details coming soon.*
-
 #### Benevity
 If your employer matches donations through Benevity, you can direct your gift to CAOS.
 <!-- TODO: Add Benevity organization ID -->
